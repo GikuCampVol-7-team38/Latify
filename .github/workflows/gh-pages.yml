@@ -21,7 +21,7 @@ jobs:
           flutter-version: '3.10.6'
 
       - name: Build Web
-        run: flutter build web
+        run: flutter build web --base-href /${{ steps.version.outputs.repository }}/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
