@@ -1,4 +1,7 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'permanentNotification.dart';
 
@@ -12,7 +15,7 @@ void main() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
   AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings = InitializationSettings(
+  const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );
 
@@ -79,6 +82,27 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final MethodChannel _notificationAccessChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/notification_access');
+
+  Future<void> _checkPermission() async {
+    try {
+      if (Platform.isAndroid) {
+        final isEnabled = await _notificationAccessChannel.invokeMethod('isNotificationAccessEnabled');
+        if (!isEnabled) {
+          await _notificationAccessChannel.invokeMethod('requestNotificationAccess');
+        }
+
+        await FlutterLocalNotificationsPlugin().resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestPermission();
+      }
+    } on PlatformException catch (_) {
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkPermission();
+  }
 
   void _incrementCounter() {
     setState(() {
