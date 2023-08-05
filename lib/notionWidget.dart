@@ -14,15 +14,28 @@ class _NotionWidgetState extends State<NotionWidget> {
   String notionApiKey = '';
   String databaseID = '';
   String title = '';
+  final TextEditingController databaseIdController = TextEditingController();
+
 
   Future<void> sendToNotion() async {
     setState((){
       isLoading = true;
     });
-    success = await addNoteToNotionTable(notionApiKey, databaseID, title);
+    success = await addNoteToNotionTable(notionApiKey, databaseIdController.text, title);
     setState((){
       isLoading = false;
     });
+  }
+  void _parseDatabaseIdFromUrl() {
+    final value = databaseIdController.text;
+    final regex = RegExp(r'https://www\.notion\.so/.{32}');
+    final match = regex.firstMatch(value);
+
+    if (match != null) {
+      final databaseId = value.substring(22, 54);
+      databaseIdController.text = databaseId;
+      databaseIdController.selection = TextSelection.fromPosition(TextPosition(offset: databaseId.length)); // カーソル位置の更新
+    }
   }
 
   @override
@@ -40,12 +53,13 @@ class _NotionWidgetState extends State<NotionWidget> {
           ),
         ),
         TextField(
-          onChanged: (value) {
-            databaseID = value.substring(22,54);
-          },
+          controller: databaseIdController,
           decoration: const InputDecoration(
             hintText: 'Enter your Database Link',
           ),
+          onChanged: (value) {
+            _parseDatabaseIdFromUrl(); // テキストが変更されるたびにURLをパース
+          },
         ),
         TextField(
           onChanged: (value) {
