@@ -5,18 +5,20 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.provider.AlarmClock
+import android.provider.Settings
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.github.GeekCampVol7team38.latify/alarm"
+    private val ALARM_CHANNEL = "com.github.GeekCampVol7team38.latify/alarm"
+    private val NOTIFICATION_ACCESS_CHANNEL = "com.github.GeekCampVol7team38.latify/notification_access"
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ALARM_CHANNEL).setMethodCallHandler {
                 call, result ->
             if (call.method == "setAlarm") {
                 val hour = call.argument<Int>("hour") ?: 0
@@ -27,6 +29,21 @@ class MainActivity: FlutterActivity() {
                 result.notImplemented()
             }
         }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NOTIFICATION_ACCESS_CHANNEL).setMethodCallHandler {
+                call, result ->
+            when (call.method) {
+                "requestNotificationAccess" -> {
+                    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                    startActivity(intent)
+                    result.success(true)
+                }
+                "isNotificationAccessEnabled" -> {
+                    result.success(isNotificationAccessEnabled())
+                }
+                else -> result.notImplemented()
+            }
+        }
     }
 
     private fun setAlarm(context: Context, hour: Int, minute: Int) {
@@ -35,5 +52,11 @@ class MainActivity: FlutterActivity() {
         intent.putExtra(AlarmClock.EXTRA_MINUTES, minute)
         intent.putExtra(AlarmClock.EXTRA_SKIP_UI, true)
         context.startActivity(intent)
+    }
+
+    private fun isNotificationAccessEnabled(): Boolean {
+        val enabledListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
+        val packageName = packageName
+        return enabledListeners?.contains(packageName) == true
     }
 }
