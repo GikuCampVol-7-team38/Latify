@@ -1,8 +1,12 @@
 package com.github.GikuCampVol7team38.latify
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationCompat
@@ -11,7 +15,8 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MyNotificationListenerService : NotificationListenerService() {
-    private val CHANNEL = "com.github.GeekCampVol7team38.latify/notificationListener"
+    // private val CHANNEL = "com.github.GeekCampVol7team38.latify/notificationListener"
+    private val CHANNEL_ID = "MyChannel"
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
@@ -172,12 +177,27 @@ class MyNotificationListenerService : NotificationListenerService() {
         }
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        
-        val builder = NotificationCompat.Builder(this, "MyChannel")
-        builder.setContentTitle("New notification from $packageName")
-        builder.setContentText(notification.tickerText)
-        builder.setSmallIcon(R.mipmap.ic_launcher)
 
+        // Create Notification Channel for Android O and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "My Notification Channel"
+            val descriptionText = "This is my own notification channel"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val actionIntent = Intent(this, NotificationReceiver::class.java)
+        val actionPendingIntent = PendingIntent.getBroadcast(this, 0, actionIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("New notification from $packageName")
+            .setContentText(notification.tickerText)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .addAction(R.mipmap.ic_launcher, "Button Name", actionPendingIntent)
+        
         notificationManager.notify(1, builder.build())
     }
 
