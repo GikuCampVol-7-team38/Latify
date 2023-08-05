@@ -1,7 +1,11 @@
 package com.github.GikuCampVol7team38.latify
 
+import android.app.Notification
+import android.app.NotificationManager
+import android.content.Context
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import androidx.core.app.NotificationCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -150,6 +154,31 @@ class MyNotificationListenerService : NotificationListenerService() {
         )
 
         // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).invokeMethod("posted", map)
+
+
+        val packageName = sbn?.packageName?.toString() ?: ""
+        val notification = sbn?.notification
+
+        sendMyNotification(packageName, notification)
+    }
+
+    private fun sendMyNotification(packageName: String, notification: Notification?) {
+        if (notification == null) {
+            return
+        }
+
+        if (packageName == "com.github.GikuCampVol7team38.latify") {
+            return
+        }
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        
+        val builder = NotificationCompat.Builder(this, "MyChannel")
+        builder.setContentTitle("New notification from $packageName")
+        builder.setContentText(notification.tickerText)
+        builder.setSmallIcon(R.mipmap.ic_launcher)
+
+        notificationManager.notify(1, builder.build())
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
