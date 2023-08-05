@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latify/alarmPage.dart';
 import 'package:latify/notionWidget.dart';
 import 'package:latify/notionPage.dart';
 
@@ -51,6 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
       MaterialPageRoute(builder: (context) => NotionPage())
     );
   }
+  void _navigateToAlarmPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AlarmPage())
+    );
+  }
 
 
   @override
@@ -86,6 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: _navigateToNotionPage,
               child: const Text('Go to Notion Page'),
+            ),
+            ElevatedButton(
+                onPressed: _navigateToAlarmPage,
+                child: const Text('Go to Alarm Page'),
             ),
             const Text(
               'You have pushed the button this many times:',
