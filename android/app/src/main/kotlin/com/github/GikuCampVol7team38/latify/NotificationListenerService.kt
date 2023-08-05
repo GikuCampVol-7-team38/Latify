@@ -12,7 +12,7 @@ class MyNotificationListenerService : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
 
-        val map = hashMapOf<String, Any>(
+        val map = hashMapOf<String, Any?>(
             // int: Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.
             "describeContents" to sbn?.describeContents(),
             // String: A key that indicates the group with which this message ranks.
