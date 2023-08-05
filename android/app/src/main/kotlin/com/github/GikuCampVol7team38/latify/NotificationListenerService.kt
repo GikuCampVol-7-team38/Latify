@@ -18,7 +18,7 @@ class MyNotificationListenerService : NotificationListenerService() {
             // String: A key that indicates the group with which this message ranks.
             "getGroupKey" to sbn?.getGroupKey(),
             // int: The id supplied to NotificationManager.notify(int, Notification).
-            "getId" to sbn?.getId,
+            "getId" to sbn?.getId(),
             // String: A unique instance key for this notification record.
             "getKey" to sbn?.getKey(),
             // Notification: The Notification supplied to NotificationManager.notify(int, Notification).
@@ -79,7 +79,7 @@ class MyNotificationListenerService : NotificationListenerService() {
             // int: Sphere of visibility of this notification, which affects how and when the SystemUI reveals the notification's presence and contents in untrusted situations (namely, on the secure lockscreen).
             "notification.visibility" to sbn?.notification?.visibility,
             // long: A timestamp related to this notification, in milliseconds since the epoch.
-            "notification.when" to sbn?.notification?.when,
+            "notification.when" to sbn?.notification?.`when`,
             // int: Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.
             "notification.describeContents" to sbn?.notification?.describeContents(),
             // Pair<RemoteInput[], Notification.Action[]>: Finds and returns a remote input and its corresponding action.
@@ -149,7 +149,7 @@ class MyNotificationListenerService : NotificationListenerService() {
             "toString" to sbn?.toString(),
         )
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).invokeMethod("posted", map)
+        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).invokeMethod("posted", map)
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
