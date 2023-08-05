@@ -23,7 +23,7 @@ class Bitmap{
 }
 
 class CharSequence{
-
+  String? value;
 }
 
 class Icon{

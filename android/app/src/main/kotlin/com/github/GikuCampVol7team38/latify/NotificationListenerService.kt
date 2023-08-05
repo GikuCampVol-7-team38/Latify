@@ -71,7 +71,7 @@ class MyNotificationListenerService : NotificationListenerService() {
             // Uri: This field was deprecated in API level 26. use NotificationChannel#getSound().
 
             // CharSequence: Text that summarizes this notification for accessibility services.
-
+            "notification.tickerText" to sbn?.notification?.tickerText?.toString(),
             // RemoteViews: Formerly, a view showing the tickerText.
 
             // long[]: This field was deprecated in API level 26. use NotificationChannel#getVibrationPattern().
@@ -103,7 +103,7 @@ class MyNotificationListenerService : NotificationListenerService() {
             // LocusId: Gets the LocusId associated with this notification.
 
             // CharSequence: Returns the settings text provided to Builder#setSettingsText(CharSequence).
-
+            "notification.getSettingsText" to sbn?.notification?.getSettingsText()?.toString(),
             // String: Returns the id that this notification supersedes, if any.
             "notification.getShortcutId" to sbn?.notification?.getShortcutId(),
             // Icon: The small icon representing this notification in the status bar and content view.

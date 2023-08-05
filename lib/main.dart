@@ -48,6 +48,7 @@ void main() async {
       notification.ledOnMS = data['notification.ledOnMS'];
       notification.number = data['notification.number'];
       notification.priority = data['notification.priority'];
+      notification.tickerText = marshallingData.CharSequence().value = data['notification.tickerText'];
       notification.vibrate = data['notification.vibrate'];
       notification.visibility = data['notification.visibility'];
       notification.when = data['notification.when'];
@@ -57,6 +58,7 @@ void main() async {
       notification.getChannelId = data['notification.getChannelId'];
       notification.getGroup = data['notification.getGroup'];
       notification.getGroupAlertBehavior = data['notification.getGroupAlertBehavior'];
+      notification.getSettingsText = marshallingData.CharSequence().value = data['notification.getSettingsText'];
       notification.getShortcutId = data['notification.getShortcutId'];
       notification.getSortKey = data['notification.getSortKey'];
       notification.getTimeoutAfter = data['notification.getTimeoutAfter'];
