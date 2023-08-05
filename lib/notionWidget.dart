@@ -10,12 +10,19 @@ class NotionWidget extends StatefulWidget {
 
 class _NotionWidgetState extends State<NotionWidget> {
   bool success = false;
+  bool isLoading = false;
   String notionApiKey = '';
   String databaseID = '';
   String title = '';
 
   Future<void> sendToNotion() async {
+    setState((){
+      isLoading = true;
+    });
     success = await addNoteToNotionTable(notionApiKey, databaseID, title);
+    setState((){
+      isLoading = false;
+    });
   }
 
   @override
@@ -34,10 +41,10 @@ class _NotionWidgetState extends State<NotionWidget> {
         ),
         TextField(
           onChanged: (value) {
-            databaseID = value;
+            databaseID = value.substring(22,54);
           },
           decoration: const InputDecoration(
-            hintText: 'Enter your Database ID',
+            hintText: 'Enter your Database Link',
           ),
         ),
         TextField(
@@ -48,9 +55,10 @@ class _NotionWidgetState extends State<NotionWidget> {
             hintText: 'Enter the title of the note',
           ),
         ),
-        Text(success ? 'Success!' : ''),
+        Text(success ? 'Success!' : 'Failed'),
+        isLoading ? CircularProgressIndicator() : Container(),
         ElevatedButton(
-          onPressed: sendToNotion,
+          onPressed: isLoading ? null:sendToNotion,
           child: const Text('Send to Notion'),
         ),
       ],
