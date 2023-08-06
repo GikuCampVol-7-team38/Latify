@@ -6,7 +6,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 
 import 'alarmList.dart';
-import 'marshallingData.dart' as marshalling_data;
 import 'notionPage.dart';
 import 'permanentNotification.dart';
 
@@ -32,67 +31,6 @@ void main() async {
   await notification.showNotification();
 
   runApp(const MyApp());
-
-  const notificationListener = MethodChannel('com.github.GeekCampVol7team38.latify/notificationListener');
-
-  notificationListener.setMethodCallHandler((MethodCall methodCall) async {
-    if (methodCall.method == 'posted') {
-      Map<String, dynamic> data = methodCall.arguments;
-      marshalling_data.Notification notification = marshalling_data.Notification();
-      notification.audioStreamType = data['notification.audioStreamType'];
-      notification.category = data['notification.category'];
-      notification.color = data['notification.color'];
-      notification.defaults = data['notification.defaults'];
-      notification.flags= data['notification.flags'];
-      notification.icon = data['notification.icon'];
-      notification.iconLevel = data['notification.iconLevel'];
-      notification.ledARGB = data['notification.ledARGB'];
-      notification.ledOffMS = data['notification.ledOffMS'];
-      notification.ledOnMS = data['notification.ledOnMS'];
-      notification.number = data['notification.number'];
-      notification.priority = data['notification.priority'];
-      notification.tickerText = marshalling_data.CharSequence().value = data['notification.tickerText'];
-      notification.vibrate = data['notification.vibrate'];
-      notification.visibility = data['notification.visibility'];
-      notification.when = data['notification.when'];
-      notification.describeContents = data['notification.describeContents'];
-      notification.getAllowSystemGeneratedContextualActions = data['notification.getAllowSystemGeneratedContextualActions'];
-      notification.getBadgeIconType = data['notification.getBadgeIconType'];
-      notification.getChannelId = data['notification.getChannelId'];
-      notification.getGroup = data['notification.getGroup'];
-      notification.getGroupAlertBehavior = data['notification.getGroupAlertBehavior'];
-      notification.getSettingsText = marshalling_data.CharSequence().value = data['notification.getSettingsText'];
-      notification.getShortcutId = data['notification.getShortcutId'];
-      notification.getSortKey = data['notification.getSortKey'];
-      notification.getTimeoutAfter = data['notification.getTimeoutAfter'];
-      notification.hasImage = data['notification.hasImage'];
-      notification.notificationToString = data['notification.notificationToString'];
-
-      marshalling_data.UserHandle userHandle = marshalling_data.UserHandle();
-      userHandle.describeContents = data['userHandle.describeContents'];
-      userHandle.userHandleHashCode = data['userHandle.hashCode'];
-      userHandle.userHandleToString = data['userHandle.toString'];
-
-      marshalling_data.StatusBarNotification statusBarNotification = marshalling_data.StatusBarNotification();
-      statusBarNotification.describeContents = data['describeContents'];
-      statusBarNotification.getGroupKey = data['getGroupKey'];
-      statusBarNotification.getId = data['getId'];
-      statusBarNotification.getKey = data['getKey'];
-      statusBarNotification.getNotification = notification;
-      statusBarNotification.getOpPkg = data['getOpPkg'];
-      statusBarNotification.getOverrideGroupKey = data['getOverrideGroupKey'];
-      statusBarNotification.getPackageName = data['getPackageName'];
-      statusBarNotification.getPostTime = data['getPostTime'];
-      statusBarNotification.getTag = data['getTag'];
-      statusBarNotification.getUid = data['getUid'];
-      statusBarNotification.getUserId = data['getUserId'];
-      statusBarNotification.isAppGroup = data['isAppGroup'];
-      statusBarNotification.isClearable = data['isClearable'];
-      statusBarNotification.isGroup = data['isGroup'];
-      statusBarNotification.isOngoing = data['isOngoing'];
-      statusBarNotification.statusBarNotificationToString = data['toString'];
-    }
-  });
 }
 
 class MyApp extends StatelessWidget {
@@ -206,12 +144,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   return Card(
                     elevation: 4,
-                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: ListTile(
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('アラーム日時'),
+                          const Text('アラーム日時'),
                           isCurrentlyEditing
                               ? TextFormField(
                             controller: editingController,
@@ -222,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               : Text(
                             DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
                           ),
-                          Text(''),
+                          const Text(''),
                         ],
                       ),
                       subtitle: Column(
@@ -236,19 +174,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                             onPressed: () {
                               _startEditing(index);
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete),
+                            icon: const Icon(Icons.delete),
                             onPressed: () {
                               _deleteItem(index);
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.calendar_today),
+                            icon: const Icon(Icons.calendar_today),
                             onPressed: () {
                               _selectDateTime(index);
                             },
@@ -285,6 +223,8 @@ class _MyHomePageState extends State<MyHomePage> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
+
+    if (!mounted) return;
 
     if (pickedDateTime != null) {
       final TimeOfDay? pickedTime = await showTimePicker(
