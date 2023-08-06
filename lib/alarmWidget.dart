@@ -20,6 +20,7 @@ class AlarmWidget extends StatefulWidget {
 }
 
 class _AlarmWidgetState extends State<AlarmWidget> {
+  AlarmList alarmList = AlarmList();
   Map<String, String> alarmData = {};
 
   //アラームと通知に関する情報を格納
@@ -27,29 +28,30 @@ class _AlarmWidgetState extends State<AlarmWidget> {
 
   @override
   Widget build(BuildContext context) {
+    AlarmList alarmList = AlarmList();
     return Scaffold(
-      //appBar: AppBar(
-      // title: Text('Scrollable List Example'),
-      // ),
+      appBar: AppBar(
+       title: Text('Scrollable List Example'),
+       ),
       body: ListView.separated(
-        itemCount: alarmList.length,
+        itemCount: alarmList.alarmTextList.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(alarmList[index]),
+            title: Text(
+              alarmList.alarmTextList[index]
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    // 編集ボタンの処理
                     _editItem(index);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
-                    // 削除ボタンの処理
                     _deleteItem(index);
                   },
                 ),
@@ -75,7 +77,7 @@ class _AlarmWidgetState extends State<AlarmWidget> {
   void _deleteItem(int index) {
     setState(() {
       // 削除ボタンが押されたアイテムをリストから削除
-      alarmList.removeAt(index);
+      alarmList.alarmTextList.removeAt(index);
     });
   }
 }

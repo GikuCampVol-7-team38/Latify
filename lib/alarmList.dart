@@ -1,6 +1,6 @@
-//class AlarmList {
+class AlarmList {
   //アラームと通知に関する情報を格納
-  var alarmList = [
+  var alarmTextList = [
     'Item 1',
     'Item 2',
     'Item 3',
@@ -14,4 +14,4 @@
     'Item 11',
     'Item 12',
   ];
-//}
+}
