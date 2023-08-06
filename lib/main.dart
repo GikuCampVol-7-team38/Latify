@@ -8,7 +8,8 @@ import 'package:latify/alarmPage.dart';
 import 'package:latify/alarmList.dart';
 import 'package:intl/intl.dart';
 
-import 'package:latify/marshallingData.dart' as marshallingData;
+import 'notionWidget.dart';
+import 'package:latify/marshallingData.dart' as marshalling_data;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +39,7 @@ void main() async {
   notificationListener.setMethodCallHandler((MethodCall methodCall) async {
     if (methodCall.method == 'posted') {
       Map<String, dynamic> data = methodCall.arguments;
-      marshallingData.Notification notification = marshallingData.Notification();
+      marshalling_data.Notification notification = marshalling_data.Notification();
       notification.audioStreamType = data['notification.audioStreamType'];
       notification.category = data['notification.category'];
       notification.color = data['notification.color'];
@@ -51,7 +52,7 @@ void main() async {
       notification.ledOnMS = data['notification.ledOnMS'];
       notification.number = data['notification.number'];
       notification.priority = data['notification.priority'];
-      notification.tickerText = marshallingData.CharSequence().value = data['notification.tickerText'];
+      notification.tickerText = marshalling_data.CharSequence().value = data['notification.tickerText'];
       notification.vibrate = data['notification.vibrate'];
       notification.visibility = data['notification.visibility'];
       notification.when = data['notification.when'];
@@ -61,19 +62,19 @@ void main() async {
       notification.getChannelId = data['notification.getChannelId'];
       notification.getGroup = data['notification.getGroup'];
       notification.getGroupAlertBehavior = data['notification.getGroupAlertBehavior'];
-      notification.getSettingsText = marshallingData.CharSequence().value = data['notification.getSettingsText'];
+      notification.getSettingsText = marshalling_data.CharSequence().value = data['notification.getSettingsText'];
       notification.getShortcutId = data['notification.getShortcutId'];
       notification.getSortKey = data['notification.getSortKey'];
       notification.getTimeoutAfter = data['notification.getTimeoutAfter'];
       notification.hasImage = data['notification.hasImage'];
       notification.notificationToString = data['notification.notificationToString'];
 
-      marshallingData.UserHandle userHandle = marshallingData.UserHandle();
+      marshalling_data.UserHandle userHandle = marshalling_data.UserHandle();
       userHandle.describeContents = data['userHandle.describeContents'];
       userHandle.userHandleHashCode = data['userHandle.hashCode'];
       userHandle.userHandleToString = data['userHandle.toString'];
 
-      marshallingData.StatusBarNotification statusBarNotification = marshallingData.StatusBarNotification();
+      marshalling_data.StatusBarNotification statusBarNotification = marshalling_data.StatusBarNotification();
       statusBarNotification.describeContents = data['describeContents'];
       statusBarNotification.getGroupKey = data['getGroupKey'];
       statusBarNotification.getId = data['getId'];
@@ -206,66 +207,98 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: ListView.builder(
-        itemCount: alarmList.alarmTextList.length,
-        itemBuilder: (context, index) {
-          final isCurrentlyEditing = isEditing && editingIndex == index;
+      body: Center(
+    // Center is a layout widget. It takes a single child and positions it
+    // in the middle of the parent.
+    child: Column(
+    // Column is also a layout widget. It takes a list of children and
+    // arranges them vertically. By default, it sizes itself to fit its
+    // children horizontally, and tries to be as tall as its parent.
+    //
+    // Column has various properties to control how it sizes itself and
+    // how it positions its children. Here we use mainAxisAlignment to
+    // center the children vertically; the main axis here is the vertical
+    // axis because Columns are vertical (the cross axis would be
+    // horizontal).
+    //
+    // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+    // action in the IDE, or press "p" in the console), to see the
+    // wireframe for each widget.
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+    ListView.builder(
+    itemCount: alarmList.alarmTextList.length,
+    itemBuilder: (context, index) {
+    final isCurrentlyEditing = isEditing && editingIndex == index;
 
-          return Card(
-            elevation: 4,
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('アラーム日時'),
-                  isCurrentlyEditing
-                      ? TextFormField(
-                    controller: editingController,
-                    onEditingComplete: () {
-                      _saveEdit(index);
-                    },
-                  )
-                      : Text(
-                    DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
-                  ),
-                  Text(''),
-                ],
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(alarmList.alarmTextList[index]),
-                  Text(alarmList.subAlarmTextList[index]),
-                ],
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      _startEditing(index);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      _deleteItem(index);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.calendar_today),
-                    onPressed: () {
-                      _selectDateTime(index);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+    return Card(
+    elevation: 4,
+    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: ListTile(
+    title: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Text('アラーム日時'),
+    isCurrentlyEditing
+    ? TextFormField(
+    controller: editingController,
+    onEditingComplete: () {
+    _saveEdit(index);
+    },
+    )
+        : Text(
+    DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
+    ),
+    Text(''),
+    ],
+    ),
+    subtitle: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Text(alarmList.alarmTextList[index]),
+    Text(alarmList.subAlarmTextList[index]),
+    ],
+    ),
+    trailing: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+    IconButton(
+    icon: Icon(Icons.edit),
+    onPressed: () {
+    _startEditing(index);
+    },
+    ),
+    IconButton(
+    icon: Icon(Icons.delete),
+    onPressed: () {
+    _deleteItem(index);
+    },
+    ),
+    IconButton(
+    icon: Icon(Icons.calendar_today),
+    onPressed: () {
+    _selectDateTime(index);
+    },
+    ),
+    ],
+    ),
+    ),
+    );
+    },
+    ),
+    ElevatedButton(
+    onPressed: _navigateToAlarmPage,
+    child: const Text('Go to Alarm Page'),
+    ),
+    const Text(
+    'You have pushed the button this many times:',
+    ),
+    Text(
+    '$_counter',
+    style: Theme.of(context).textTheme.headlineMedium,
+    ),
+    ],
+    ),
     );
   }
 
