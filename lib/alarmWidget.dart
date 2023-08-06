@@ -40,6 +40,9 @@ class _AlarmWidgetState extends State<AlarmWidget> {
             title: Text(
               alarmList.alarmTextList[index]
             ),
+            subtitle: Text(
+                alarmList.subAlarmTextList[index]
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
