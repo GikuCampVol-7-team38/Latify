@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 
-import 'alarmPage.dart';
 import 'alarmList.dart';
 import 'marshallingData.dart' as marshalling_data;
 import 'notionPage.dart';
@@ -96,7 +95,6 @@ void main() async {
   });
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -148,7 +146,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   final MethodChannel _notificationAccessChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/notification_access');
 
   Future<void> _checkPermission() async {
@@ -169,24 +166,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _checkPermission();
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  void _navigateToAlarmPage() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => AlarmPage())
-    );
   }
 
   void _navigateToNotionPage(){
@@ -280,10 +259,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
               ),
-            ),
-            ElevatedButton(
-              onPressed: _navigateToAlarmPage,
-              child: const Text('Go to Alarm Page'),
             ),
             ElevatedButton(
               onPressed: _navigateToNotionPage,
