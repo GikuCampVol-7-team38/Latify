@@ -14,7 +14,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity: FlutterActivity() {
     private val ALARM_CHANNEL = "com.github.GeekCampVol7team38.latify/alarm"
     private val NOTIFICATION_ACCESS_CHANNEL = "com.github.GeekCampVol7team38.latify/notification_access"
-    private val NOTIFICATION_CHANNNEL = 'com.github.GikuCampVol7team38.latify/notification';
+    private val NOTIFICATION_CHANNNEL = "com.github.GikuCampVol7team38.latify/notification";
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

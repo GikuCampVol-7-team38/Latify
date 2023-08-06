@@ -10,7 +10,7 @@ class PermanentNotification {
   Future<void> showNotification() async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-        'your_channel_id', 'your_channel_name',
+        '通知のスヌーズ', '一番上の通知をスヌーズします',
         importance: Importance.max,
         priority: Priority.high,
         ongoing: true, // これで通知はキルできないように設定(してるはずなんだけどなぁ)
