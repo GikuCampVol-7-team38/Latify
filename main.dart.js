@@ -61172,7 +61172,7 @@ A.UF.prototype={
 oB(a){var s=0,r=A.a_(t.H),q=this
 var $async$oB=A.a0(function(b,c){if(b===1)return A.X(c,r)
 while(true)switch(s){case 0:s=2
-return A.a4(q.a.ti(0,0,"Notification title","Notification body",B.wz,"item x"),$async$oB)
+return A.a4(q.a.ti(0,0,"\u901a\u77e5\u306e\u30b9\u30cc\u30fc\u30ba","\u6700\u4e0a\u90e8\u306e\u901a\u77e5\u3092\u30b9\u30cc\u30fc\u30ba\u3057\u307e\u3059",B.wz,"item x"),$async$oB)
 case 2:return A.Y(null,r)}})
 return A.Z($async$oB,r)}}
 A.O3.prototype={}

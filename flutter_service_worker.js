@@ -20,7 +20,7 @@ const RESOURCES = {"icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb0489
 "assets/NOTICES": "6b0c4f5d06bc2e3389c20948fce09e3a",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "version.json": "eac91d2680b7101a46eb4879896612d1",
-"main.dart.js": "f21bc4df2b5dd6995b5eb73e40132944",
+"main.dart.js": "f09840c519d0271cbfbe28c7c2efea68",
 "canvaskit/canvaskit.js": "76f7d822f42397160c5dfc69cbc9b2de",
 "canvaskit/skwasm.wasm": "6711032e17bf49924b2b001cef0d3ea3",
 "canvaskit/skwasm.js": "1df4d741f441fa1a4d10530ced463ef8",
