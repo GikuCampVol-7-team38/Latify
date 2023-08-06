@@ -10,7 +10,7 @@ class PermanentNotification {
   Future<void> showNotification() async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
-        '通知のスヌーズ', '一番上の通知をスヌーズします',
+        '通知のスヌーズ', '最上部の通知をスヌーズします',
         importance: Importance.max,
         priority: Priority.high,
         ongoing: true, // これで通知はキルできないように設定(してるはずなんだけどなぁ)
@@ -25,7 +25,7 @@ class PermanentNotification {
     NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
-        0, 'Notification title', 'Notification body', platformChannelSpecifics,
+        0, '通知のスヌーズ', '最上部の通知をスヌーズします', platformChannelSpecifics,
         payload: 'item x');
   }
 
