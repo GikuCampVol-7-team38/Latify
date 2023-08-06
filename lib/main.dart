@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'permanentNotification.dart';
+import 'package:latify/alarmPage.dart';
 
 import 'package:latify/marshallingData.dart' as marshallingData;
 
@@ -177,6 +178,12 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
+  void _navigateToAlarmPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AlarmPage())
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +222,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+                onPressed: _navigateToAlarmPage,
+                child: const Text('Go to Alarm Page'),
+            ),
             const Text(
               'You have pushed the button this many times:',
             ),
