@@ -194,36 +194,32 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: ListView.separated(
+      body: ListView.builder(
         itemCount: alarmList.alarmTextList.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-                alarmList.alarmTextList[index]
+          return Card(
+            elevation: 4, // カードの影の高さを設定
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // カードの余白を設定
+            child: ListTile(
+              title: Text(alarmList.alarmTextList[index]),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      _editItem(index);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _deleteItem(index);
+                    },
+                  ),
+                ],
+              ),
             ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    _editItem(index);
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    _deleteItem(index);
-                  },
-                ),
-              ],
-            ),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider(
-            color: Colors.red,
-            thickness: 3,
           );
         },
       ),
