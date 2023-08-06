@@ -187,6 +187,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   AlarmList alarmList = AlarmList();
+  bool isEditing = false;
+  TextEditingController editingController = TextEditingController();
+  TimeOfDay selectedTime = TimeOfDay.now(); // 選択された時間を保持する変数
+  int editingIndex = -1;
+
+  @override
+  void dispose() {
+    editingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,25 +208,53 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView.builder(
         itemCount: alarmList.alarmTextList.length,
         itemBuilder: (context, index) {
+          final isCurrentlyEditing = isEditing && editingIndex == index;
+
           return Card(
             elevation: 4,
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
-              title: Text(alarmList.alarmTextList[index]),
-              subtitle: Text(alarmList.subAlarmTextList[index]), // サブテキストを追加
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('アラーム時間'),
+                  isCurrentlyEditing
+                      ? TextFormField(
+                    controller: editingController,
+                    onEditingComplete: () {
+                      _saveEdit(index);
+                    },
+                  )
+                      : Text(alarmList.alarmTimeList[index]),
+                  Text(''),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(alarmList.alarmTextList[index]),
+                  Text(alarmList.subAlarmTextList[index]),
+                ],
+              ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      _editItem(index);
+                      _startEditing(index);
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
                       _deleteItem(index);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.access_time),
+                    onPressed: () {
+                      _selectTime(index);
                     },
                   ),
                 ],
@@ -227,10 +266,36 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _startEditing(int index) {
+    setState(() {
+      isEditing = true;
+      editingIndex = index;
+      editingController.text = alarmList.alarmTimeList[index];
+    });
+  }
 
-  void _editItem(int index) {
-    // 編集ボタンが押されたアイテムを処理
-    // 例えば、ダイアログを表示して新しい値を入力させるなどの処理を行う
+  void _selectTime(int index) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        selectedTime = pickedTime;
+        alarmList.alarmTimeList[index] =
+        '${pickedTime.hour}:${pickedTime.minute}';
+      });
+    }
+  }
+
+  void _saveEdit(int index) {
+    setState(() {
+      isEditing = false;
+      editingIndex = -1;
+      alarmList.alarmTimeList[index] = editingController.text;
+      editingController.text = '';
+    });
   }
 
   void _deleteItem(int index) {
