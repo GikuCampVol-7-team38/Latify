@@ -198,10 +198,11 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: alarmList.alarmTextList.length,
         itemBuilder: (context, index) {
           return Card(
-            elevation: 4, // カードの影の高さを設定
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // カードの余白を設定
+            elevation: 4,
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
               title: Text(alarmList.alarmTextList[index]),
+              subtitle: Text(alarmList.subAlarmTextList[index]), // サブテキストを追加
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -225,6 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
 
   void _editItem(int index) {
     // 編集ボタンが押されたアイテムを処理

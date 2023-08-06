@@ -10,12 +10,12 @@ class AlarmList {
     '[アラーム時間：2020/08/05 20:00] GitHub',
   ];
   var subAlarmTextList = [
-    '最終面接直結！25卒募集',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-    'Item 6',
-    'Item 7',
+    '卒業研究の中間発表',
+    '8月vol.7ハッカソン技育CAMP',
+    '家族',
+    'Latify',
+    'MSK2',
+    '学校',
+    'Latify',
   ];
 }
