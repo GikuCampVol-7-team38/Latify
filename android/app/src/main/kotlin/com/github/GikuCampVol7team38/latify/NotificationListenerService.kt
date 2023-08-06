@@ -238,14 +238,22 @@ class MyNotificationListenerService : NotificationListenerService() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        val actionIntent = Intent(this, NotificationReceiver::class.java)
-        val actionPendingIntent = PendingIntent.getBroadcast(this, 0, actionIntent, PendingIntent.FLAG_IMMUTABLE)
+        val delayBy5minutesIntent = Intent(this, DelayBy5MinutesReciever::class.java)
+        val delayBy5minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy5minutesIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        val delayBy10minutesIntent = Intent(this, DelayBy10MinutesReciever::class.java)
+        val delayBy10minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy10minutesIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        val delayBy60minutesIntent = Intent(this, DelayBy60MinutesReciever::class.java)
+        val delayBy60minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy60minutesIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("New notification from $packageName")
             .setContentText(notification.tickerText)
             .setSmallIcon(R.mipmap.ic_launcher)
-            .addAction(R.mipmap.ic_launcher, "Button Name", actionPendingIntent)
+            .addAction(R.mipmap.ic_launcher, "Delay by 5 minutes", delayBy5minutesPendingIntent)
+            .addAction(R.mipmap.ic_launcher, "Delay by 10 minutes", delayBy10minutesPendingIntent)
+            .addAction(R.mipmap.ic_launcher, "Delay by an hour", delayBy60minutesPendingIntent)
             .setOngoing(true)
 
         notificationManager.notify(1, builder.build())

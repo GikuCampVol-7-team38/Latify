@@ -61,6 +61,8 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".NotificationReceiver" />
+        <receiver android:name=".DelayBy5MinutesReciever" />
+        <receiver android:name=".DelayBy10MinutesReciever" />
+        <receiver android:name=".DelayBy60MinutesReciever" />
     </application>
 </manifest>
