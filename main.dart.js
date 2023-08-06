@@ -19447,7 +19447,8 @@ N2:function N2(){},
 mi:function mi(a,b){this.a=a
 this.b=b},
 N4:function N4(){},
-N1:function N1(a){this.a=a},
+N1:function N1(a,b){this.a=a
+this.b=b},
 MF(){var s=0,r=A.a_(t.z),q,p
 var $async$MF=A.a0(function(a,b){if(a===1)return A.X(b,r)
 while(true)switch(s){case 0:if($.ap==null)A.ac9()
@@ -60834,9 +60835,10 @@ p.h(q,"toString")}return A.Y(null,r)}})
 return A.Z($async$$1,r)},
 $S:366}
 A.BK.prototype={
-O(a){return new A.rl(B.DH,"Flutter Demo",A.abR(null,A.ahF(B.N,B.Dn),!0),null)}}
+O(a){return new A.rl(B.DH,"Latify",A.abR(null,A.ahF(B.N,B.Dn),!0),null)}}
 A.rx.prototype={
-ap(){return new A.Ic(new A.N1(A.a(["Item 1","Item 2","Item 3","Item 4","Item 5","Item 6","Item 7","Item 8","Item 9","Item 10","Item 11","Item 12"],t.s)),B.m)}}
+ap(){var s=t.s
+return new A.Ic(new A.N1(A.a(["[\u30a2\u30e9\u30fc\u30e0\u6642\u9593\uff1a2020/08/05 14:00] Notion","[\u30a2\u30e9\u30fc\u30e0\u6642\u9593\uff1a2020/08/05 15:00] Slack","[\u30a2\u30e9\u30fc\u30e0\u6642\u9593\uff1a2020/08/05 16:00] Line","[\u30a2\u30e9\u30fc\u30e0\u6642\u9593\uff1a2020/08/05 17:00] X","[\u30a2\u30e9\u30fc\u30e0\u6642\u9593\uff1a2020/08/05 18:00] Discord","[\u30a2\u30e9\u30fc\u30e0\u6642\u9593\uff1a2020/08/05 19:00] Teams","[\u30a2\u30e9\u30fc\u30e0\u6642\u9593\uff1a2020/08/05 20:00] GitHub"],s),A.a(["\u6700\u7d42\u9762\u63a5\u76f4\u7d50\uff0125\u5352\u52df\u96c6","Item 2","Item 3","Item 4","Item 5","Item 6","Item 7"],s)),B.m)}}
 A.Ic.prototype={
 ky(){var s=0,r=A.a_(t.H),q=1,p,o,n,m,l
 var $async$ky=A.a0(function(a,b){if(a===1){p=b
@@ -60871,7 +60873,7 @@ this.ky()},
 O(a){var s=null,r=A.ag(a).ax,q=r.k2
 r=q==null?r.c:q
 this.a.toString
-q=A.abP("Latify")
+q=A.abP("Alarm List")
 return new A.tx(new A.pv(q,r,new A.J7(s,s,1/0,56),s),A.ajR(new A.a1L(this),this.f.a.length,new A.a1M()),s)},
 PQ(a){this.aH(new A.a1I(this,a))}}
 A.a1L.prototype={
