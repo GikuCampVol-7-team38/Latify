@@ -3,13 +3,13 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'permanentNotification.dart';
-import 'package:latify/alarmPage.dart';
-import 'package:latify/alarmList.dart';
 import 'package:intl/intl.dart';
 
-import 'notionWidget.dart';
-import 'package:latify/marshallingData.dart' as marshalling_data;
+import 'alarmPage.dart';
+import 'alarmList.dart';
+import 'marshallingData.dart' as marshalling_data;
+import 'notionPage.dart';
+import 'permanentNotification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -181,10 +181,18 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
+
   void _navigateToAlarmPage() {
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AlarmPage())
+    );
+  }
+
+  void _navigateToNotionPage(){
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NotionPage())
     );
   }
 
@@ -289,13 +297,9 @@ class _MyHomePageState extends State<MyHomePage> {
     ElevatedButton(
     onPressed: _navigateToAlarmPage,
     child: const Text('Go to Alarm Page'),
-    ),
-    const Text(
-    'You have pushed the button this many times:',
-    ),
-    Text(
-    '$_counter',
-    style: Theme.of(context).textTheme.headlineMedium,
+    ),ElevatedButton(
+    onPressed: _navigateToNotionPage,
+    child: const Text('Go to Notion Page'),
     ),
     ],
     ),
