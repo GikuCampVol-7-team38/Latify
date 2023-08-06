@@ -7,7 +7,7 @@ class AlarmPage extends StatelessWidget {
     return Theme(
       data: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.cyan,
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
