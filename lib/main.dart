@@ -216,94 +216,83 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-    // Center is a layout widget. It takes a single child and positions it
-    // in the middle of the parent.
-    child: Column(
-    // Column is also a layout widget. It takes a list of children and
-    // arranges them vertically. By default, it sizes itself to fit its
-    // children horizontally, and tries to be as tall as its parent.
-    //
-    // Column has various properties to control how it sizes itself and
-    // how it positions its children. Here we use mainAxisAlignment to
-    // center the children vertically; the main axis here is the vertical
-    // axis because Columns are vertical (the cross axis would be
-    // horizontal).
-    //
-    // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-    // action in the IDE, or press "p" in the console), to see the
-    // wireframe for each widget.
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-    ListView.builder(
-    itemCount: alarmList.alarmTextList.length,
-    itemBuilder: (context, index) {
-    final isCurrentlyEditing = isEditing && editingIndex == index;
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: ListView.builder(
+                itemCount: alarmList.alarmTextList.length,
+                itemBuilder: (context, index) {
+                  final isCurrentlyEditing = isEditing && editingIndex == index;
 
-    return Card(
-    elevation: 4,
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    child: ListTile(
-    title: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text('アラーム日時'),
-    isCurrentlyEditing
-    ? TextFormField(
-    controller: editingController,
-    onEditingComplete: () {
-    _saveEdit(index);
-    },
-    )
-        : Text(
-    DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
-    ),
-    Text(''),
-    ],
-    ),
-    subtitle: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text(alarmList.alarmTextList[index]),
-    Text(alarmList.subAlarmTextList[index]),
-    ],
-    ),
-    trailing: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-    IconButton(
-    icon: Icon(Icons.edit),
-    onPressed: () {
-    _startEditing(index);
-    },
-    ),
-    IconButton(
-    icon: Icon(Icons.delete),
-    onPressed: () {
-    _deleteItem(index);
-    },
-    ),
-    IconButton(
-    icon: Icon(Icons.calendar_today),
-    onPressed: () {
-    _selectDateTime(index);
-    },
-    ),
-    ],
-    ),
-    ),
+                  return Card(
+                    elevation: 4,
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('アラーム日時'),
+                          isCurrentlyEditing
+                              ? TextFormField(
+                            controller: editingController,
+                            onEditingComplete: () {
+                              _saveEdit(index);
+                            },
+                          )
+                              : Text(
+                            DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
+                          ),
+                          Text(''),
+                        ],
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(alarmList.alarmTextList[index]),
+                          Text(alarmList.subAlarmTextList[index]),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              _startEditing(index);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              _deleteItem(index);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.calendar_today),
+                            onPressed: () {
+                              _selectDateTime(index);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            ElevatedButton(
+              onPressed: _navigateToAlarmPage,
+              child: const Text('Go to Alarm Page'),
+            ),
+            ElevatedButton(
+              onPressed: _navigateToNotionPage,
+              child: const Text('Go to Notion Page'),
+            ),
+          ],
+        ),
+      ),
     );
-    },
-    ),
-    ElevatedButton(
-    onPressed: _navigateToAlarmPage,
-    child: const Text('Go to Alarm Page'),
-    ),ElevatedButton(
-    onPressed: _navigateToNotionPage,
-    child: const Text('Go to Notion Page'),
-    ),
-    ],
-    ),
-    ));
   }
 
   void _startEditing(int index) {
