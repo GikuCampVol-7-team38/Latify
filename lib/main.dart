@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'permanentNotification.dart';
 import 'package:latify/alarmPage.dart';
 import 'package:latify/alarmList.dart';
+import 'package:intl/intl.dart';
 
 import 'package:latify/marshallingData.dart' as marshallingData;
 
@@ -189,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
   AlarmList alarmList = AlarmList();
   bool isEditing = false;
   TextEditingController editingController = TextEditingController();
-  TimeOfDay selectedTime = TimeOfDay.now(); // 選択された時間を保持する変数
+  DateTime selectedDateTime = DateTime.now();
   int editingIndex = -1;
 
   @override
@@ -217,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('アラーム時間'),
+                  Text('アラーム日時'),
                   isCurrentlyEditing
                       ? TextFormField(
                     controller: editingController,
@@ -225,7 +226,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       _saveEdit(index);
                     },
                   )
-                      : Text(alarmList.alarmTimeList[index]),
+                      : Text(
+                    DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
+                  ),
                   Text(''),
                 ],
               ),
@@ -252,9 +255,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.access_time),
+                    icon: Icon(Icons.calendar_today),
                     onPressed: () {
-                      _selectTime(index);
+                      _selectDateTime(index);
                     },
                   ),
                 ],
@@ -274,18 +277,33 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _selectTime(int index) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
+  Future<void> _selectDateTime(int index) async {
+    final DateTime? pickedDateTime = await showDatePicker(
       context: context,
-      initialTime: selectedTime,
+      initialDate: selectedDateTime,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
 
-    if (pickedTime != null) {
-      setState(() {
-        selectedTime = pickedTime;
-        alarmList.alarmTimeList[index] =
-        '${pickedTime.hour}:${pickedTime.minute}';
-      });
+    if (pickedDateTime != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          selectedDateTime = DateTime(
+            pickedDateTime.year,
+            pickedDateTime.month,
+            pickedDateTime.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+          alarmList.alarmTimeList[index] =
+              DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+        });
+      }
     }
   }
 
