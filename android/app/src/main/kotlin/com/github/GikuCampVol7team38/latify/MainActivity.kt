@@ -10,6 +10,7 @@ import android.provider.Settings
 import androidx.annotation.NonNull
 import java.io.File
 import org.msgpack.core.MessagePack
+import org.msgpack.core.MessageUnpacker
 import org.msgpack.core.MessageBufferPacker
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -87,37 +88,7 @@ class MainActivity: FlutterActivity() {
                     val file = File(this.filesDir, "raw/$fileName")
                     if (file.exists()) {
                         val unpacker = MessagePack.newDefaultUnpacker(file.readBytes())
-
-                        val mapSize = unpacker.unpackMapHeader()
-                        val resultMap = hashMapOf<String, Any?>()
-
-                        for (i in 0 until mapSize) {
-                            val key = unpacker.unpackString()
-
-                            val value = when (unpacker.getNextFormat()) {
-                                org.msgpack.core.MessageFormat.BOOLEAN -> unpacker.unpackBoolean()
-                                org.msgpack.core.MessageFormat.STR8 -> unpacker.unpackString()
-                                org.msgpack.core.MessageFormat.STR16 -> unpacker.unpackString()
-                                org.msgpack.core.MessageFormat.FIXSTR -> unpacker.unpackString()
-                                org.msgpack.core.MessageFormat.INT32 -> unpacker.unpackInt()
-                                org.msgpack.core.MessageFormat.INT64 -> unpacker.unpackLong()
-                                org.msgpack.core.MessageFormat.FLOAT32 -> unpacker.unpackFloat()
-                                org.msgpack.core.MessageFormat.FLOAT64 -> unpacker.unpackDouble()
-                                org.msgpack.core.MessageFormat.POSFIXINT -> unpacker.unpackInt()
-                                org.msgpack.core.MessageFormat.NEGFIXINT -> unpacker.unpackInt()
-                                org.msgpack.core.MessageFormat.UINT16 -> unpacker.unpackInt()
-                                org.msgpack.core.MessageFormat.UINT32 -> unpacker.unpackLong()
-                                org.msgpack.core.MessageFormat.UINT64 -> unpacker.unpackLong()
-                                org.msgpack.core.MessageFormat.NIL -> {
-                                    unpacker.unpackNil()
-                                    null
-                                }
-                                else -> unpacker.skipValue()
-                            }
-                            resultMap[key] = value
-                        }
-
-                        result.success(resultMap)
+                        result.success(unpackNestedMap(unpacker))
                     } else {
                         result.success(null)
                     }
@@ -205,6 +176,41 @@ class MainActivity: FlutterActivity() {
         val enabledListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
         val packageName = packageName
         return enabledListeners?.contains(packageName) == true
+    }
+
+    private fun unpackNestedMap(unpacker: MessageUnpacker): Map<String, Any?> {
+        val mapSize = unpacker.unpackMapHeader()
+        val resultMap = hashMapOf<String, Any?>()
+        for (i in 0 until mapSize) {
+            val key = unpacker.unpackString()
+            val format = unpacker.getNextFormat()
+            println("format: $format")
+            val value = when (format) {
+                org.msgpack.core.MessageFormat.BOOLEAN -> unpacker.unpackBoolean()
+                org.msgpack.core.MessageFormat.STR8 -> unpacker.unpackString()
+                org.msgpack.core.MessageFormat.STR16 -> unpacker.unpackString()
+                org.msgpack.core.MessageFormat.FIXSTR -> unpacker.unpackString()
+                org.msgpack.core.MessageFormat.INT32 -> unpacker.unpackInt()
+                org.msgpack.core.MessageFormat.INT64 -> unpacker.unpackLong()
+                org.msgpack.core.MessageFormat.FLOAT32 -> unpacker.unpackFloat()
+                org.msgpack.core.MessageFormat.FLOAT64 -> unpacker.unpackDouble()
+                org.msgpack.core.MessageFormat.POSFIXINT -> unpacker.unpackInt()
+                org.msgpack.core.MessageFormat.NEGFIXINT -> unpacker.unpackInt()
+                org.msgpack.core.MessageFormat.UINT16 -> unpacker.unpackInt()
+                org.msgpack.core.MessageFormat.UINT32 -> unpacker.unpackLong()
+                org.msgpack.core.MessageFormat.UINT64 -> unpacker.unpackLong()
+                org.msgpack.core.MessageFormat.MAP16 -> unpackNestedMap(unpacker)
+                org.msgpack.core.MessageFormat.MAP32 -> unpackNestedMap(unpacker)
+                org.msgpack.core.MessageFormat.FIXMAP -> unpackNestedMap(unpacker)
+                org.msgpack.core.MessageFormat.NIL -> {
+                    unpacker.unpackNil()
+                    null
+                }
+                else -> unpacker.skipValue()
+            }
+            resultMap[key] = value
+        }
+        return resultMap
     }
 
     private fun notificationAction(action: String?) {
