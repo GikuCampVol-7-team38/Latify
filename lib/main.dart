@@ -248,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('アラーム日時'),
+                          const Text('通知日時'),
                           isCurrentlyEditing
                               ? TextFormField(
                             controller: _editingController,
