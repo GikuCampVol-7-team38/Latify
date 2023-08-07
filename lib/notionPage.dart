@@ -28,11 +28,9 @@ class NotionPage extends StatelessWidget {
             ),
           ],
         ),
-        body: Container(
-          child: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: NotionWidget(),
-          ),
+        body: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: NotionWidget(),
         ),
       ),
     );

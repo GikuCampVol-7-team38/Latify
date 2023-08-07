@@ -28,11 +28,9 @@ class AlarmPage extends StatelessWidget {
             ),
           ],
         ),
-        body: Container(
-          child: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: AlarmWidget(),
-          ),
+        body: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: AlarmWidget(),
         ),
       ),
     );
