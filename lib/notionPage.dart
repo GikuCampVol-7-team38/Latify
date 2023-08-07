@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:latify/notionWidget.dart'; // NotionWidgetへの正しいパスに変更してください
 
 class NotionPage extends StatelessWidget {
+  const NotionPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Theme(
