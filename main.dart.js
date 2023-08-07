@@ -81885,79 +81885,79 @@ kd(){return this.aak()},
 aak(){var s=0,r=A.a4(t.H),q,p=this,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a
 var $async$kd=A.a5(function(a0,a1){if(a0===1)return A.a1(a1,r)
 while(true)switch(s){case 0:a={}
-if(!$.aqt()){s=1
-break}s=3
-return A.a0(A.aEI(),$async$kd)
-case 3:o=a1
-if(o==null){n=p.y
-m=new A.fx()
-m.w="Notion"
-l=$.WR()
-m.x=l.l7("2023/08/05 14:00",!1,!1).a
+if(!$.aqt()){o=p.y
+n=new A.fx()
+n.w="Notion"
+m=$.WR()
+n.x=m.l7("2023/08/05 14:00",!1,!1).a
+l=new A.i9()
+l.fx=new A.hP("\u5352\u696d\u7814\u7a76\u306e\u4e2d\u9593\u767a\u8868")
+n.e=l
+l=new A.fx()
+l.w="Slack"
+l.x=m.l7("2023/08/05 15:00",!1,!1).a
 k=new A.i9()
-k.fx=new A.hP("\u5352\u696d\u7814\u7a76\u306e\u4e2d\u9593\u767a\u8868")
-m.e=k
+k.fx=new A.hP("8\u6708vol.7\u30cf\u30c3\u30ab\u30bd\u30f3\u6280\u80b2CAMP")
+l.e=k
 k=new A.fx()
-k.w="Slack"
-k.x=l.l7("2023/08/05 15:00",!1,!1).a
+k.w="Line"
+k.x=m.l7("2023/08/05 16:00",!1,!1).a
 j=new A.i9()
-j.fx=new A.hP("8\u6708vol.7\u30cf\u30c3\u30ab\u30bd\u30f3\u6280\u80b2CAMP")
+j.fx=new A.hP("\u5bb6\u65cf")
 k.e=j
 j=new A.fx()
-j.w="Line"
-j.x=l.l7("2023/08/05 16:00",!1,!1).a
+j.w="X"
+j.x=m.l7("2023/08/05 17:00",!1,!1).a
 i=new A.i9()
-i.fx=new A.hP("\u5bb6\u65cf")
+i.fx=new A.hP("Latify")
 j.e=i
 i=new A.fx()
-i.w="X"
-i.x=l.l7("2023/08/05 17:00",!1,!1).a
+i.w="Discord"
+i.x=m.l7("2023/08/06 18:00",!1,!1).a
 h=new A.i9()
-h.fx=new A.hP("Latify")
+h.fx=new A.hP("MSK2")
 i.e=h
 h=new A.fx()
-h.w="Discord"
-h.x=l.l7("2023/08/06 18:00",!1,!1).a
+h.w="Teams"
+h.x=m.l7("2023/08/07 19:00",!1,!1).a
 g=new A.i9()
-g.fx=new A.hP("MSK2")
+g.fx=new A.hP("\u5b66\u6821")
 h.e=g
 g=new A.fx()
-g.w="Teams"
-g.x=l.l7("2023/08/07 19:00",!1,!1).a
-f=new A.i9()
-f.fx=new A.hP("\u5b66\u6821")
-g.e=f
-f=new A.fx()
-f.w="GitHub"
-f.x=l.l7("2023/08/07 20:00",!1,!1).a
-l=new A.i9()
-l.fx=new A.hP("Latify")
-f.e=l
-n.a=A.a([new A.ek(m),new A.ek(k),new A.ek(j),new A.ek(i),new A.ek(h),new A.ek(g),new A.ek(f)],t.S6)
+g.w="GitHub"
+g.x=m.l7("2023/08/07 20:00",!1,!1).a
+m=new A.i9()
+m.fx=new A.hP("Latify")
+g.e=m
+o.a=A.a([new A.ek(n),new A.ek(l),new A.ek(k),new A.ek(j),new A.ek(i),new A.ek(h),new A.ek(g)],t.S6)
 s=1
-break}n=t.N
-m=t.z
+break}s=3
+return A.a0(A.aEI(),$async$kd)
+case 3:f=a1
+if(f==null){s=1
+break}o=t.N
+n=t.z
 s=4
-return A.a0(B.ee.f_("read",A.ah(["fileName","AppState"],n,n),!1,m),$async$kd)
+return A.a0(B.ee.f_("read",A.ah(["fileName","AppState"],o,o),!1,n),$async$kd)
 case 4:e=a1
 d=a.a=new A.vh(A.a([],t.S6))
 if(e!=null){c=A.aAU(new A.ZE(null,new A.pn(),e,A.jj(e.buffer,e.byteOffset,null),!1).yi(0))
-a.a=c==null?d:c}l=J.aD(o),k=t.K,j=t.XE
-case 5:if(!l.u()){s=6
-break}i=l.gI(l)
+a.a=c==null?d:c}m=J.aD(f),l=t.K,k=t.XE
+case 5:if(!m.u()){s=6
+break}j=m.gI(m)
 s=7
-return A.a0(A.aEJ(i),$async$kd)
+return A.a0(A.aEJ(j),$async$kd)
 case 7:b=a1
 if(b==null){s=5
 break}B.b.D(a.a.a,new A.ek(b))
-h=a.a.jU()
-g=A.a([],j)
-g=new A.H4(new A.Oj(g))
-new A.LT(new A.pn(),g,null).fO(h)
+i=a.a.jU()
+h=A.a([],k)
+h=new A.H4(new A.Oj(h))
+new A.LT(new A.pn(),h,null).fO(i)
 s=8
-return A.a0(B.ee.f_("write",A.ah(["fileName","AppState","bytes",g.zP()],n,k),!1,m),$async$kd)
+return A.a0(B.ee.f_("write",A.ah(["fileName","AppState","bytes",h.zP()],o,l),!1,n),$async$kd)
 case 8:s=9
-return A.a0(A.aEH(i),$async$kd)
+return A.a0(A.aEH(j),$async$kd)
 case 9:s=5
 break
 case 6:p.a8(new A.ah0(a,p))
