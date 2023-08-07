@@ -183,9 +183,7 @@ class MainActivity: FlutterActivity() {
         val resultMap = hashMapOf<String, Any?>()
         for (i in 0 until mapSize) {
             val key = unpacker.unpackString()
-            val format = unpacker.getNextFormat()
-            println("format: $format")
-            val value = when (format) {
+            val value = when (unpacker.getNextFormat()) {
                 org.msgpack.core.MessageFormat.BOOLEAN -> unpacker.unpackBoolean()
                 org.msgpack.core.MessageFormat.STR8 -> unpacker.unpackString()
                 org.msgpack.core.MessageFormat.STR16 -> unpacker.unpackString()
