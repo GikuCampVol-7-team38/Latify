@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _navigateToNotionPage(){
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => NotionPage())
+        MaterialPageRoute(builder: (context) => const NotionPage())
     );
   }
 
