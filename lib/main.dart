@@ -10,30 +10,9 @@ import 'alarm_list.dart';
 import 'application_state.dart';
 import 'notification_data.dart';
 import 'notionPage.dart';
-import 'permanent_notification.dart';
 import 'new_notification.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-
-  // Androidのデフォルトアイコンを使用
-  const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-  final PermanentNotification notification =
-  PermanentNotification(flutterLocalNotificationsPlugin);
-
-  await notification.showNotification();
-
+void main() {
   runApp(const MyApp());
 }
 
