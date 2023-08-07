@@ -117,18 +117,18 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
+    final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
+    var applicationState = ApplicationState();
+
+    if (result != null) {
+      applicationState = ApplicationState.fromDynamic(deserialize(result)) ?? applicationState;
+    }
+
     for (final n in notifications) {
       final sbn = await NewNotification.peek(n);
 
       if (sbn == null) {
         continue;
-      }
-
-      final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
-      var applicationState = ApplicationState();
-
-      if (result != null) {
-        applicationState = ApplicationState.fromDynamic(deserialize(result)) ?? applicationState;
       }
 
       final notificationData = NotificationData(sbn);
@@ -138,14 +138,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
       await NewNotification.delete(n);
     }
-    final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
-
-    if (result == null) {
-      return;
-    }
 
     setState((){
-      _applicationState = ApplicationState.fromDynamic(deserialize(result ?? Uint8List(0))) ?? ApplicationState();
+      _applicationState = applicationState;
     });
   }
 
@@ -318,10 +313,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _deleteItem(int index) {
+  void _deleteItem(int index) async {
+    _applicationState.notificationList.removeAt(index);
+    await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(_applicationState.toMap())});
     setState(() {
-      // 削除ボタンが押されたアイテムをリストから削除
-      _alarmList.alarmTextList.removeAt(index);
+      _applicationState = _applicationState;
     });
   }
 }
