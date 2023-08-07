@@ -252,10 +252,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: _navigateToNotionPage,
-              child: const Text('Go to Notion Page'),
-            ),
           ],
         ),
       ),
