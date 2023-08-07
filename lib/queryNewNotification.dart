@@ -33,7 +33,7 @@ class NewNotification{
 
   static Future<marshalling_data.StatusBarNotification?> peek(String notificationGuid) {
     try {
-      return _platform.invokeMethod('getNotificationDetail', {"fileName": notificationGuid }).then((value) {
+      return _platform.invokeMethod('getNotificationDetail', {'fileName': notificationGuid }).then((value) {
         if (value is Map<Object?, Object?>) {
           return marshalling_data.StatusBarNotification.fromMap(value);
         }
@@ -56,7 +56,7 @@ class NewNotification{
 
   static Future<bool> delete(String notificationGuid) {
     try {
-      return _platform.invokeMethod('deleteNotification', {"fileName": notificationGuid }).then((value) {
+      return _platform.invokeMethod('deleteNotification', {'fileName': notificationGuid }).then((value) {
         if (value is bool) {
           return value;
         }
