@@ -67,6 +67,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static final _dateFormat = DateFormat('yyyy-MM-dd HH:mm');
+
   final MethodChannel _lifecycleChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/lifecycle');
   final MethodChannel _notificationAccessChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/notification_access');
   final MethodChannel _storageChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/storage');
@@ -190,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           )
                               : Text(
-                            DateFormat('yyyy-MM-dd HH:mm').format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0)),
+                            _dateFormat.format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0)),
                           ),
                           const Text(''),
                         ],
@@ -234,7 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           IconButton(
                             icon: const Icon(Icons.calendar_today),
                             onPressed: () {
-                              _selectDateTime(index, DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0));
+                              _selectDateTime(index);
                             },
                           ),
                         ],
@@ -258,11 +260,12 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isEditing = true;
       _editingIndex = index;
-      _editingController.text = _alarmList.alarmTimeList[index];
+      _editingController.text = _dateFormat.format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0));
     });
   }
 
-  Future<void> _selectDateTime(int index, DateTime dateTime) async {
+  Future<void> _selectDateTime(int index) async {
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0);
     final DateTime? pickedDateTime = await showDatePicker(
       context: context,
       initialDate: dateTime,
@@ -270,35 +273,43 @@ class _MyHomePageState extends State<MyHomePage> {
       lastDate: DateTime(2101),
     );
 
-    if (!mounted) return;
-
-    if (pickedDateTime != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(dateTime),
-      );
-
-      if (pickedTime != null) {
-        setState(() {
-          dateTime = DateTime(
-            pickedDateTime.year,
-            pickedDateTime.month,
-            pickedDateTime.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-          _alarmList.alarmTimeList[index] = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
-        });
-      }
+    if (pickedDateTime == null || !mounted) {
+      return;
     }
+
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(dateTime),
+    );
+
+    if (pickedTime == null) {
+      return;
+    }
+
+    _applicationState.notificationList[index].statusBarNotification.getPostTime = DateTime(
+      pickedDateTime.year,
+      pickedDateTime.month,
+      pickedDateTime.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    ).millisecondsSinceEpoch;
+    await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(_applicationState.toMap())});
+
+    setState(() {
+      _applicationState = _applicationState;
+    });
   }
 
-  void _saveEdit(int index) {
+  void _saveEdit(int index) async {
+    final dateTime = _dateFormat.parse(_editingController.text);
+    _applicationState.notificationList[index].statusBarNotification.getPostTime = dateTime.millisecondsSinceEpoch;
+    await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(_applicationState.toMap())});
+
     setState(() {
       _isEditing = false;
       _editingIndex = -1;
-      _alarmList.alarmTimeList[index] = _editingController.text;
       _editingController.text = '';
+      _applicationState = _applicationState;
     });
   }
 
