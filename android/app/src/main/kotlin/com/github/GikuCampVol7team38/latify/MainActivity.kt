@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle;
 import android.provider.AlarmClock
 import android.provider.Settings
@@ -23,6 +24,7 @@ class MainActivity: FlutterActivity() {
     private val NOTIFICATION_RECEIVER = "com.github.GeekCampVol7team38.latify/notificationReceiver"
     private val NOTIFICATION_CHANNNEL = "com.github.GikuCampVol7team38.latify/notification";
     private val STORAGE_CHANNNEL = "com.github.GeekCampVol7team38.latify/storage";
+    private val PACKAGE_MANAGER_CHANNNEL = "com.github.GeekCampVol7team38.latify/packageManager";
 
     private lateinit var lifecycleMethodChannel: MethodChannel
 
@@ -159,6 +161,19 @@ class MainActivity: FlutterActivity() {
                     result.success(file.exists())
                 }
 
+                else -> result.notImplemented()
+            }
+        }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PACKAGE_MANAGER_CHANNNEL).setMethodCallHandler {
+                call, result ->
+            when (call.method) {
+                "getAppLabel" -> {
+                    val packageManager = getPackageManager()
+                    val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+                    val appLabel = packageManager.getApplicationLabel(appInfo).toString()
+                    result.success(appLabel)
+                }
                 else -> result.notImplemented()
             }
         }
