@@ -169,7 +169,13 @@ class MainActivity: FlutterActivity() {
                 call, result ->
             when (call.method) {
                 "getAppLabel" -> {
-                    val packageManager = getPackageManager()
+                    val packageName = call.argument<String>("packageName") ?: ""
+
+                    if (packageName == "") {
+                        result.success(null)
+                        return@setMethodCallHandler
+                    }
+
                     val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
                     val appLabel = packageManager.getApplicationLabel(appInfo).toString()
                     result.success(appLabel)
