@@ -170,17 +170,17 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  AlarmList alarmList = AlarmList();
-  bool isEditing = false;
-  TextEditingController editingController = TextEditingController();
-  DateTime selectedDateTime = DateTime.now();
-  int editingIndex = -1;
+  final AlarmList _alarmList = AlarmList();
+  bool _isEditing = false;
+  final TextEditingController _editingController = TextEditingController();
+  DateTime _selectedDateTime = DateTime.now();
+  int _editingIndex = -1;
 
   ApplicationState _applicationState = ApplicationState();
 
   @override
   void dispose() {
-    editingController.dispose();
+    _editingController.dispose();
     super.dispose();
   }
 
@@ -199,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListView.builder(
                 itemCount: _applicationState.notificationList.length,
                 itemBuilder: (context, index) {
-                  final isCurrentlyEditing = isEditing && editingIndex == index;
+                  final isCurrentlyEditing = _isEditing && _editingIndex == index;
 
                   return Card(
                     elevation: 4,
@@ -211,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           const Text('アラーム日時'),
                           isCurrentlyEditing
                               ? TextFormField(
-                            controller: editingController,
+                            controller: _editingController,
                             onEditingComplete: () {
                               _saveEdit(index);
                             },
@@ -273,16 +273,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _startEditing(int index) {
     setState(() {
-      isEditing = true;
-      editingIndex = index;
-      editingController.text = alarmList.alarmTimeList[index];
+      _isEditing = true;
+      _editingIndex = index;
+      _editingController.text = _alarmList.alarmTimeList[index];
     });
   }
 
   Future<void> _selectDateTime(int index) async {
     final DateTime? pickedDateTime = await showDatePicker(
       context: context,
-      initialDate: selectedDateTime,
+      initialDate: _selectedDateTime,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
@@ -292,20 +292,19 @@ class _MyHomePageState extends State<MyHomePage> {
     if (pickedDateTime != null) {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
       );
 
       if (pickedTime != null) {
         setState(() {
-          selectedDateTime = DateTime(
+          _selectedDateTime = DateTime(
             pickedDateTime.year,
             pickedDateTime.month,
             pickedDateTime.day,
             pickedTime.hour,
             pickedTime.minute,
           );
-          alarmList.alarmTimeList[index] =
-              DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+          _alarmList.alarmTimeList[index] = DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime);
         });
       }
     }
@@ -313,17 +312,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _saveEdit(int index) {
     setState(() {
-      isEditing = false;
-      editingIndex = -1;
-      alarmList.alarmTimeList[index] = editingController.text;
-      editingController.text = '';
+      _isEditing = false;
+      _editingIndex = -1;
+      _alarmList.alarmTimeList[index] = _editingController.text;
+      _editingController.text = '';
     });
   }
 
   void _deleteItem(int index) {
     setState(() {
       // 削除ボタンが押されたアイテムをリストから削除
-      alarmList.alarmTextList.removeAt(index);
+      _alarmList.alarmTextList.removeAt(index);
     });
   }
 }
