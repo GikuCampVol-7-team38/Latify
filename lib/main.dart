@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 import 'application_state.dart';
 import 'notification_data.dart';
-import 'notionPage.dart';
+import 'notion_page.dart';
 import 'new_notification.dart';
 
 void main() {
