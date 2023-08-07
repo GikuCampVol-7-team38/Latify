@@ -1,10 +1,11 @@
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:msgpack_dart/msgpack_dart.dart';
 import 'package:intl/intl.dart';
+import 'package:msgpack_dart/msgpack_dart.dart';
 
 import 'application_state.dart';
 import 'marshalling_data.dart' as marshalling_data;
@@ -77,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _checkPermission() async {
     try {
-      if (Platform.isAndroid) {
+      if (!kIsWeb && Platform.isAndroid) {
         final isEnabled = await _notificationAccessChannel.invokeMethod('isNotificationAccessEnabled');
         if (!isEnabled) {
           await _notificationAccessChannel.invokeMethod('requestNotificationAccess');
@@ -90,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _reloadNotification() async {
-    if (!Platform.isAndroid) {
+    if (kIsWeb || !Platform.isAndroid) {
       _applicationState.notificationList = [
         NotificationData(
           marshalling_data.StatusBarNotification()
