@@ -16,13 +16,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static const _title = 'Latify';
+
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Latify',
+      title: _title,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Alarm List'),
+      home: const MyHomePage(title: _title),
     );
   }
 }
