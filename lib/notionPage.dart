@@ -19,18 +19,18 @@ class NotionPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Notion Integration'),
+          title: const Text('Notion Integration'),
           elevation: 0,
           actions: [
             IconButton(
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               onPressed: () {},
             ),
           ],
         ),
         body: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+          child: const Padding(
+            padding: EdgeInsets.all(16.0),
             child: NotionWidget(),
           ),
         ),

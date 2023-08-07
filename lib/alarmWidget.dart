@@ -31,7 +31,7 @@ class _AlarmWidgetState extends State<AlarmWidget> {
     AlarmList alarmList = AlarmList();
     return Scaffold(
       appBar: AppBar(
-       title: Text('Scrollable List Example'),
+       title: const Text('Scrollable List Example'),
        ),
       body: ListView.separated(
         itemCount: alarmList.alarmTextList.length,
@@ -47,13 +47,13 @@ class _AlarmWidgetState extends State<AlarmWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   onPressed: () {
                     _editItem(index);
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () {
                     _deleteItem(index);
                   },
@@ -63,7 +63,7 @@ class _AlarmWidgetState extends State<AlarmWidget> {
           );
         },
         separatorBuilder: (context, index) {
-          return Divider(
+          return const Divider(
             color: Colors.red,
             thickness: 3,
           );

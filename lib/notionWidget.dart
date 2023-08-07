@@ -70,7 +70,7 @@ class _NotionWidgetState extends State<NotionWidget> {
           ),
         ),
         Text(success ? 'Success!' : 'Failed'),
-        isLoading ? CircularProgressIndicator() : Container(),
+        isLoading ? const CircularProgressIndicator() : Container(),
         ElevatedButton(
           onPressed: isLoading ? null:sendToNotion,
           child: const Text('Send to Notion'),
