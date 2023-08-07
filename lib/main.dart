@@ -173,7 +173,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final AlarmList _alarmList = AlarmList();
   bool _isEditing = false;
   final TextEditingController _editingController = TextEditingController();
-  DateTime _selectedDateTime = DateTime.now();
   int _editingIndex = -1;
 
   ApplicationState _applicationState = ApplicationState();
@@ -251,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           IconButton(
                             icon: const Icon(Icons.calendar_today),
                             onPressed: () {
-                              _selectDateTime(index);
+                              _selectDateTime(index, DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0));
                             },
                           ),
                         ],
@@ -279,10 +278,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> _selectDateTime(int index) async {
+  Future<void> _selectDateTime(int index, DateTime dateTime) async {
     final DateTime? pickedDateTime = await showDatePicker(
       context: context,
-      initialDate: _selectedDateTime,
+      initialDate: dateTime,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
@@ -292,19 +291,19 @@ class _MyHomePageState extends State<MyHomePage> {
     if (pickedDateTime != null) {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
+        initialTime: TimeOfDay.fromDateTime(dateTime),
       );
 
       if (pickedTime != null) {
         setState(() {
-          _selectedDateTime = DateTime(
+          dateTime = DateTime(
             pickedDateTime.year,
             pickedDateTime.month,
             pickedDateTime.day,
             pickedTime.hour,
             pickedTime.minute,
           );
-          _alarmList.alarmTimeList[index] = DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime);
+          _alarmList.alarmTimeList[index] = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
         });
       }
     }
