@@ -1,13 +1,18 @@
 import 'dart:io' show Platform;
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:msgpack_dart/msgpack_dart.dart';
 import 'package:intl/intl.dart';
 
 import 'alarmList.dart';
+import 'application_state.dart';
+import 'notification_data.dart';
 import 'notionPage.dart';
 import 'permanentNotification.dart';
+import 'queryNewNotification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,7 +89,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final MethodChannel _lifecycleChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/lifecycle');
   final MethodChannel _notificationAccessChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/notification_access');
+  final MethodChannel _storageChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/storage');
 
   Future<void> _checkPermission() async {
     try {
@@ -100,10 +107,61 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> _reloadNotification() async {
+    if (!Platform.isAndroid) {
+      return;
+    }
+
+    final notifications = await NewNotification.getList();
+
+    if (notifications == null) {
+      return;
+    }
+
+    for (final n in notifications) {
+      final sbn = await NewNotification.peek(n);
+
+      if (sbn == null) {
+        continue;
+      }
+
+      final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
+      var applicationState = ApplicationState();
+
+      if (result != null) {
+        applicationState = ApplicationState.fromDynamic(deserialize(result)) ?? applicationState;
+      }
+
+      final notificationData = NotificationData(sbn);
+      applicationState.notificationList.add(notificationData);
+
+      await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(applicationState.toMap())});
+
+      await NewNotification.delete(n);
+    }
+    final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
+
+    if (result == null) {
+      return;
+    }
+
+    setState((){
+      _applicationState = ApplicationState.fromDynamic(deserialize(result ?? Uint8List(0))) ?? ApplicationState();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _checkPermission();
+    _reloadNotification();
+
+    _lifecycleChannel.setMethodCallHandler((MethodCall methodCall) {
+      if (methodCall.method == 'activityResumed') {
+        return _reloadNotification();
+      }
+      return Future.value();
+    });
   }
 
   void _navigateToNotionPage(){
@@ -118,6 +176,8 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController editingController = TextEditingController();
   DateTime selectedDateTime = DateTime.now();
   int editingIndex = -1;
+
+  ApplicationState _applicationState = ApplicationState();
 
   @override
   void dispose() {
@@ -138,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Expanded(
               child: ListView.builder(
-                itemCount: alarmList.alarmTextList.length,
+                itemCount: _applicationState.notificationList.length,
                 itemBuilder: (context, index) {
                   final isCurrentlyEditing = isEditing && editingIndex == index;
 
@@ -158,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           )
                               : Text(
-                            DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime),
+                            DateFormat('yyyy-MM-dd HH:mm').format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0)),
                           ),
                           const Text(''),
                         ],
@@ -166,8 +226,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(alarmList.alarmTextList[index]),
-                          Text(alarmList.subAlarmTextList[index]),
+                          Text(_applicationState.notificationList[index].statusBarNotification.getPackageName ?? '',
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,),
+                          Text(_applicationState.notificationList[index].statusBarNotification.getNotification?.tickerText?.value ?? '',
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,),
                         ],
                       ),
                       trailing: Row(
