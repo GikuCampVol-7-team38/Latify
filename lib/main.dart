@@ -6,7 +6,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:msgpack_dart/msgpack_dart.dart';
 import 'package:intl/intl.dart';
 
-import 'alarm_list.dart';
 import 'application_state.dart';
 import 'notification_data.dart';
 import 'notionPage.dart';
@@ -146,7 +145,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  final AlarmList _alarmList = AlarmList();
   bool _isEditing = false;
   final TextEditingController _editingController = TextEditingController();
   int _editingIndex = -1;
