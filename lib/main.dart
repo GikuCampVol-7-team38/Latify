@@ -91,12 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _reloadNotification() async {
     if (!Platform.isAndroid) {
-      return;
-    }
-
-    final notifications = await NewNotification.getList();
-
-    if (notifications == null) {
       _applicationState.notificationList = [
         NotificationData(
           marshalling_data.StatusBarNotification()
@@ -155,6 +149,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
       ];
+      return;
+    }
+
+    final notifications = await NewNotification.getList();
+
+    if (notifications == null) {
       return;
     }
 
