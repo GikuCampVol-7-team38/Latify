@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'marshallingData.dart' as marshalling_data;
+import 'marshalling_data.dart' as marshalling_data;
 
 class NewNotification{
   static const _platform = MethodChannel('com.github.GeekCampVol7team38.latify/notificationReceiver');

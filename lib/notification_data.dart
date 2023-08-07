@@ -1,4 +1,4 @@
-import 'marshallingData.dart';
+import 'marshalling_data.dart';
 
 class NotificationData {
   final StatusBarNotification statusBarNotification;

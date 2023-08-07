@@ -6,12 +6,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:msgpack_dart/msgpack_dart.dart';
 import 'package:intl/intl.dart';
 
-import 'alarmList.dart';
+import 'alarm_list.dart';
 import 'application_state.dart';
 import 'notification_data.dart';
 import 'notionPage.dart';
-import 'permanentNotification.dart';
-import 'queryNewNotification.dart';
+import 'permanent_notification.dart';
+import 'new_notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

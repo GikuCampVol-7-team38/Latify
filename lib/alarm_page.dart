@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:latify/alarmWidget.dart';
+
+import 'alarm_widget.dart';
 
 class AlarmPage extends StatelessWidget {
   const AlarmPage({super.key});

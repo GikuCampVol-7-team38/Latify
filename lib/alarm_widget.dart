@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:latify/alarmList.dart';
+
+import 'alarm_list.dart';
 
 class AlarmWidget extends StatefulWidget {
   const AlarmWidget({Key? key}) : super(key: key);

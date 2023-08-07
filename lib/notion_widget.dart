@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:latify/notion.dart';
+
+import 'notion.dart';
 
 class NotionWidget extends StatefulWidget {
   const NotionWidget({super.key});
