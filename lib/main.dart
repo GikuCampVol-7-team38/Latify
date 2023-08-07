@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
         NotificationData(
           marshalling_data.StatusBarNotification()
             ..getPackageName = 'Notion'
-            ..getPostTime = _dateFormat.parse('2023/08/05 14:00').millisecondsSinceEpoch
+            ..getPostTime = _dateFormat.parse('2023-08-05 14:00').millisecondsSinceEpoch
             ..getNotification = (marshalling_data.Notification()
               ..tickerText= marshalling_data.CharSequence('卒業研究の中間発表')
             ),
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NotificationData(
           marshalling_data.StatusBarNotification()
             ..getPackageName = 'Slack'
-            ..getPostTime = _dateFormat.parse('2023/08/05 15:00').millisecondsSinceEpoch
+            ..getPostTime = _dateFormat.parse('2023-08-05 15:00').millisecondsSinceEpoch
             ..getNotification = (marshalling_data.Notification()
               ..tickerText= marshalling_data.CharSequence('8月vol.7ハッカソン技育CAMP')
             ),
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NotificationData(
           marshalling_data.StatusBarNotification()
             ..getPackageName = 'Line'
-            ..getPostTime = _dateFormat.parse('2023/08/05 16:00').millisecondsSinceEpoch
+            ..getPostTime = _dateFormat.parse('2023-08-05 16:00').millisecondsSinceEpoch
             ..getNotification = (marshalling_data.Notification()
               ..tickerText= marshalling_data.CharSequence('家族')
             ),
@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NotificationData(
           marshalling_data.StatusBarNotification()
             ..getPackageName = 'X'
-            ..getPostTime = _dateFormat.parse('2023/08/05 17:00').millisecondsSinceEpoch
+            ..getPostTime = _dateFormat.parse('2023-08-05 17:00').millisecondsSinceEpoch
             ..getNotification = (marshalling_data.Notification()
               ..tickerText= marshalling_data.CharSequence('Latify')
             ),
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NotificationData(
           marshalling_data.StatusBarNotification()
             ..getPackageName = 'Discord'
-            ..getPostTime = _dateFormat.parse('2023/08/06 18:00').millisecondsSinceEpoch
+            ..getPostTime = _dateFormat.parse('2023-08-06 18:00').millisecondsSinceEpoch
             ..getNotification = (marshalling_data.Notification()
               ..tickerText= marshalling_data.CharSequence('MSK2')
             ),
@@ -136,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NotificationData(
           marshalling_data.StatusBarNotification()
             ..getPackageName = 'Teams'
-            ..getPostTime = _dateFormat.parse('2023/08/07 19:00').millisecondsSinceEpoch
+            ..getPostTime = _dateFormat.parse('2023-08-07 19:00').millisecondsSinceEpoch
             ..getNotification = (marshalling_data.Notification()
               ..tickerText= marshalling_data.CharSequence('学校')
             ),
@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
           NotificationData(
           marshalling_data.StatusBarNotification()
             ..getPackageName = 'GitHub'
-            ..getPostTime = _dateFormat.parse('2023/08/07 20:00').millisecondsSinceEpoch
+            ..getPostTime = _dateFormat.parse('2023-08-07 20:00').millisecondsSinceEpoch
             ..getNotification = (marshalling_data.Notification()
               ..tickerText= marshalling_data.CharSequence('Latify')
             ),
