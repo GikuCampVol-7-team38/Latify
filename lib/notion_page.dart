@@ -24,12 +24,6 @@ class NotionPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Notion Integration'),
           elevation: 0,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {},
-            ),
-          ],
         ),
         body: const Padding(
           padding: EdgeInsets.all(16.0),
