@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle;
 import android.provider.AlarmClock
 import android.provider.Settings
 import androidx.annotation.NonNull
@@ -15,10 +16,28 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
+    private val LIFECYCLE = "com.github.GeekCampVol7team38.latify/lifecycle"
     private val ALARM_CHANNEL = "com.github.GeekCampVol7team38.latify/alarm"
     private val NOTIFICATION_ACCESS_CHANNEL = "com.github.GeekCampVol7team38.latify/notification_access"
     private val NOTIFICATION_RECEIVER = "com.github.GeekCampVol7team38.latify/notificationReceiver"
     private val NOTIFICATION_CHANNNEL = "com.github.GikuCampVol7team38.latify/notification";
+    private val STORAGE_CHANNNEL = "com.github.GeekCampVol7team38.latify/storage";
+
+    private lateinit var lifecycleMethodChannel: MethodChannel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val flutterEngine = FlutterEngine(this)
+        lifecycleMethodChannel = MethodChannel(flutterEngine.dartExecutor, LIFECYCLE)
+        lifecycleMethodChannel.invokeMethod("activityResumed", null)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleMethodChannel.invokeMethod("activityResumed", null)
+    }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -50,7 +69,8 @@ class MainActivity: FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NOTIFICATION_RECEIVER).setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NOTIFICATION_RECEIVER).setMethodCallHandler {
+                call, result ->
             when (call.method) {
                 "getAvailableNotification" -> {
                     val directory = File(this.filesDir, "raw")
@@ -63,7 +83,6 @@ class MainActivity: FlutterActivity() {
                 }
 
                 "getNotificationDetail" -> {
-                    println("getNotificationDetail")
                     val fileName = call.argument<String>("fileName") ?: ""
                     val file = File(this.filesDir, "raw/$fileName")
                     if (file.exists()) {
@@ -74,7 +93,8 @@ class MainActivity: FlutterActivity() {
 
                         for (i in 0 until mapSize) {
                             val key = unpacker.unpackString()
-                            val value = when (val format = unpacker.getNextFormat()) {
+
+                            val value = when (unpacker.getNextFormat()) {
                                 org.msgpack.core.MessageFormat.BOOLEAN -> unpacker.unpackBoolean()
                                 org.msgpack.core.MessageFormat.STR8 -> unpacker.unpackString()
                                 org.msgpack.core.MessageFormat.STR16 -> unpacker.unpackString()
@@ -87,16 +107,12 @@ class MainActivity: FlutterActivity() {
                                 org.msgpack.core.MessageFormat.NEGFIXINT -> unpacker.unpackInt()
                                 org.msgpack.core.MessageFormat.UINT16 -> unpacker.unpackInt()
                                 org.msgpack.core.MessageFormat.UINT32 -> unpacker.unpackLong()
-                                org.msgpack.core.MessageFormat.UINT64 -> unpacker.unpackBigInteger()
+                                org.msgpack.core.MessageFormat.UINT64 -> unpacker.unpackLong()
                                 org.msgpack.core.MessageFormat.NIL -> {
                                     unpacker.unpackNil()
                                     null
                                 }
-
-                                else -> {
-                                    println("Unsupported type: $format")
-                                    unpacker.skipValue()
-                                }
+                                else -> unpacker.skipValue()
                             }
                             resultMap[key] = value
                         }
@@ -130,6 +146,49 @@ class MainActivity: FlutterActivity() {
                 result.success(null)
             } else {
                 result.notImplemented()
+            }
+        }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, STORAGE_CHANNNEL).setMethodCallHandler {
+                call, result ->
+            when (call.method) {
+                "read" -> {
+                    val fileName = call.argument<String>("fileName") ?: ""
+                    val file = File(this.filesDir, fileName)
+                    if (file.exists()) {
+                        val bytes = file.readBytes()
+                        result.success(bytes)
+                    } else {
+                        result.success(null)
+                    }
+                }
+
+                "write" -> {
+                    val fileName = call.argument<String>("fileName") ?: ""
+                    val bytes = call.argument<ByteArray>("bytes") ?: byteArrayOf()
+                    val file = File(this.filesDir, fileName)
+                    file.writeBytes(bytes)
+                    result.success(null)
+                }
+
+                "delete" -> {
+                    val fileName = call.argument<String>("fileName") ?: ""
+                    val file = File(this.filesDir, fileName)
+                    if (file.exists()) {
+                        file.delete()
+                        result.success(true)
+                    } else {
+                        result.success(false)
+                    }
+                }
+
+                "exists" -> {
+                    val fileName = call.argument<String>("fileName") ?: ""
+                    val file = File(this.filesDir, fileName)
+                    result.success(file.exists())
+                }
+
+                else -> result.notImplemented()
             }
         }
     }
