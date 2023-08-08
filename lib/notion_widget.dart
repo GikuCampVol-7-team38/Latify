@@ -10,32 +10,32 @@ class NotionWidget extends StatefulWidget {
 }
 
 class _NotionWidgetState extends State<NotionWidget> {
-  bool success = false;
-  bool isLoading = false;
-  String notionApiKey = '';
-  String databaseID = '';
-  String title = '';
-  final TextEditingController databaseIdController = TextEditingController();
+  bool _success = false;
+  bool _isLoading = false;
+  String _notionApiKey = '';
+  String _databaseID = '';
+  String _title = '';
+  final TextEditingController _databaseIdController = TextEditingController();
 
 
   Future<void> sendToNotion() async {
     setState((){
-      isLoading = true;
+      _isLoading = true;
     });
-    success = await addNoteToNotionTable(notionApiKey, databaseIdController.text, title);
+    _success = await addNoteToNotionTable(_notionApiKey, _databaseIdController.text, _title);
     setState((){
-      isLoading = false;
+      _isLoading = false;
     });
   }
   void _parseDatabaseIdFromUrl() {
-    final value = databaseIdController.text;
+    final value = _databaseIdController.text;
     final regex = RegExp(r'https://www\.notion\.so/.{32}');
     final match = regex.firstMatch(value);
 
     if (match != null) {
       final databaseId = value.substring(22, 54);
-      databaseIdController.text = databaseId;
-      databaseIdController.selection = TextSelection.fromPosition(TextPosition(offset: databaseId.length)); // カーソル位置の更新
+      _databaseIdController.text = databaseId;
+      _databaseIdController.selection = TextSelection.fromPosition(TextPosition(offset: databaseId.length)); // カーソル位置の更新
     }
   }
 
@@ -46,7 +46,7 @@ class _NotionWidgetState extends State<NotionWidget> {
       children: [
         TextField(
           onChanged: (value) {
-            notionApiKey = value;
+            _notionApiKey = value;
           },
           obscureText: true,
           decoration: const InputDecoration(
@@ -54,7 +54,7 @@ class _NotionWidgetState extends State<NotionWidget> {
           ),
         ),
         TextField(
-          controller: databaseIdController,
+          controller: _databaseIdController,
           decoration: const InputDecoration(
             hintText: 'Enter your Database Link',
           ),
@@ -64,16 +64,16 @@ class _NotionWidgetState extends State<NotionWidget> {
         ),
         TextField(
           onChanged: (value) {
-            title = value;
+            _title = value;
           },
           decoration: const InputDecoration(
             hintText: 'Enter the title of the note',
           ),
         ),
-        Text(success ? 'Success!' : 'Failed'),
-        isLoading ? const CircularProgressIndicator() : Container(),
+        Text(_success ? 'Success!' : 'Failed'),
+        _isLoading ? const CircularProgressIndicator() : Container(),
         ElevatedButton(
-          onPressed: isLoading ? null:sendToNotion,
+          onPressed: _isLoading ? null:sendToNotion,
           child: const Text('Send to Notion'),
         ),
       ],
