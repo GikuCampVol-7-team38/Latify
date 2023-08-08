@@ -174,14 +174,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ];
       return;
     }
+    final applicationState = await _loadAppState();
 
     final notifications = await NewNotification.getList();
 
     if (notifications == null) {
       return;
     }
-
-    final applicationState = await _loadAppState();
 
     for (final n in notifications) {
       final sbn = await NewNotification.peek(n);
