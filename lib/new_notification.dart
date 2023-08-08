@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'marshalling_data.dart' as marshalling_data;
 
 class NewNotification{
-  static const _platform = MethodChannel('com.github.GeekCampVol7team38.latify/notificationReceiver');
+  static const _notificationReceiver = MethodChannel('com.github.GeekCampVol7team38.latify/notificationReceiver');
 
   static Future<bool> isEmpty() {
     try {
-      return _platform.invokeMethod('getAvailableNotification').then((value) {
+      return _notificationReceiver.invokeMethod('getAvailableNotification').then((value) {
         if (value is List<String>) {
           return value.isEmpty;
         }
@@ -20,7 +20,7 @@ class NewNotification{
 
   static Future<Iterable<String>?> getList() {
     try {
-      return _platform.invokeMethod('getAvailableNotification').then((value) {
+      return _notificationReceiver.invokeMethod('getAvailableNotification').then((value) {
         if (value is List<Object?>) {
           return value.whereType<String>();
         }
@@ -33,7 +33,7 @@ class NewNotification{
 
   static Future<marshalling_data.StatusBarNotification?> peek(String notificationGuid) {
     try {
-      return _platform.invokeMethod('getNotificationDetail', {'fileName': notificationGuid }).then((value) {
+      return _notificationReceiver.invokeMethod('getNotificationDetail', {'fileName': notificationGuid }).then((value) {
         if (value is Map<Object?, Object?>) {
           return marshalling_data.StatusBarNotification.fromMap(value);
         }
@@ -56,7 +56,7 @@ class NewNotification{
 
   static Future<bool> delete(String notificationGuid) {
     try {
-      return _platform.invokeMethod('deleteNotification', {'fileName': notificationGuid }).then((value) {
+      return _notificationReceiver.invokeMethod('deleteNotification', {'fileName': notificationGuid }).then((value) {
         if (value is bool) {
           return value;
         }
