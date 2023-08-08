@@ -22,6 +22,7 @@ class MainActivity: FlutterActivity() {
     private val NOTIFICATION_CHANNNEL = "com.github.GikuCampVol7team38.latify/notification";
     private val STORAGE_CHANNNEL = "com.github.GeekCampVol7team38.latify/storage";
     private val PACKAGE_MANAGER_CHANNNEL = "com.github.GeekCampVol7team38.latify/packageManager";
+    private val NOTION_CHANNNEL = "com.github.GeekCampVol7team38.latify/notion";
 
     private lateinit var lifecycleMethodChannel: MethodChannel
 
@@ -175,6 +176,63 @@ class MainActivity: FlutterActivity() {
                     val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
                     val appLabel = packageManager.getApplicationLabel(appInfo).toString()
                     result.success(appLabel)
+                }
+                else -> result.notImplemented()
+            }
+        }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NOTION_CHANNNEL).setMethodCallHandler {
+                call, result ->
+            when (call.method) {
+                "send" -> {
+                    val json = call.argument<String>("json") ?: ""
+                    val databaseKey = call.argument<String>("databaseKey") ?: ""
+                    val connectTimeoutMillis = call.argument<Int>("connectTimeoutMillis") ?: 5000
+                    val readTimeoutMillis = call.argument<Int>("readTimeoutMillis") ?: 15000
+                    val success = NotionTerminal.send(
+                        NotionData.load(this),
+                        json,
+                        databaseKey,
+                        connectTimeoutMillis,
+                        readTimeoutMillis,
+                        { b -> result.success(b)}
+                    )
+                }
+                "setApiKey" ->{
+                    val apiKey = call.argument<String>("apiKey") ?: ""
+                    if (apiKey == "") {
+                        result.success(null)
+                        return@setMethodCallHandler
+                    }
+                    val notionData = NotionData.load(this)
+                    notionData.ApiKey = apiKey
+                    notionData.save(this)
+                    result.success(true)
+                }
+                "setDatabaseID" ->{
+                    val databaseID = call.argument<String>("databaseID") ?: ""
+                    val databaseKey = call.argument<String>("databaseKey") ?: ""
+                    if (databaseID == "" || databaseKey == "") {
+                        result.success(false)
+                        return@setMethodCallHandler
+                    }
+                    val notionData = NotionData.load(this)
+                    notionData.databaseIDMap[databaseKey] = databaseID
+                    notionData.save(this)
+                    result.success(true)
+                }
+                "getApiKey" ->{
+                    val notionData = NotionData.load(this)
+                    result.success(notionData.ApiKey)
+                }
+                "getDatabaseID" ->{
+                    val databaseKey = call.argument<String>("databaseKey") ?: ""
+                    if (databaseKey == "") {
+                        result.success("")
+                        return@setMethodCallHandler
+                    }
+                    val notionData = NotionData.load(this)
+                    result.success(notionData.databaseIDMap[databaseKey])
                 }
                 else -> result.notImplemented()
             }
