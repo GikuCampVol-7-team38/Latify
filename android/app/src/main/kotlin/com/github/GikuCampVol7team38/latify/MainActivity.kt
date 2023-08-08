@@ -15,7 +15,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
-    private val LIFECYCLE = "com.github.GeekCampVol7team38.latify/lifecycle"
+    private val LIFECYCLE_CHANNEL = "com.github.GeekCampVol7team38.latify/lifecycle"
     private val ALARM_CHANNEL = "com.github.GeekCampVol7team38.latify/alarm"
     private val NOTIFICATION_ACCESS_CHANNEL = "com.github.GeekCampVol7team38.latify/notification_access"
     private val NOTIFICATION_RECEIVER = "com.github.GeekCampVol7team38.latify/notificationReceiver"
@@ -29,7 +29,7 @@ class MainActivity: FlutterActivity() {
         super.onCreate(savedInstanceState)
 
         val flutterEngine = FlutterEngine(this)
-        lifecycleMethodChannel = MethodChannel(flutterEngine.dartExecutor, LIFECYCLE)
+        lifecycleMethodChannel = MethodChannel(flutterEngine.dartExecutor, LIFECYCLE_CHANNEL)
         lifecycleMethodChannel.invokeMethod("activityResumed", null)
     }
 
