@@ -76,6 +76,28 @@ class _MyHomePageState extends State<MyHomePage> {
   final MethodChannel _notificationAccessChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/notification_access');
   final MethodChannel _storageChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/storage');
 
+  Future<ApplicationState> _loadAppState() async {
+    try {
+      final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
+      if (result != null) {
+        final appState = ApplicationState.fromDynamic(deserialize(result));
+        if (appState != null) {
+          return appState;
+        }
+      }
+    } on PlatformException catch (_) {
+    }
+    return ApplicationState();
+  }
+
+  Future<dynamic> _saveAppState(ApplicationState appState) {
+    try {
+      return _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(appState.toMap())});
+    } on PlatformException catch (_) {
+    }
+    return Future.value();
+  }
+
   Future<void> _checkPermission() async {
     try {
       if (!kIsWeb && Platform.isAndroid) {
@@ -159,12 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
-    var applicationState = ApplicationState();
-
-    if (result != null) {
-      applicationState = ApplicationState.fromDynamic(deserialize(result)) ?? applicationState;
-    }
+    final applicationState = await _loadAppState();
 
     for (final n in notifications) {
       final sbn = await NewNotification.peek(n);
@@ -176,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final notificationData = NotificationData(sbn);
       applicationState.notificationList.add(notificationData);
 
-      await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(applicationState.toMap())});
+      await _saveAppState(applicationState);
 
       await NewNotification.delete(n);
     }
@@ -355,7 +372,7 @@ class _MyHomePageState extends State<MyHomePage> {
       pickedTime.hour,
       pickedTime.minute,
     ).millisecondsSinceEpoch;
-    await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(_applicationState.toMap())});
+    await _saveAppState(_applicationState);
 
     setState(() {
       _applicationState = _applicationState;
@@ -365,7 +382,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _saveEdit(int index) async {
     final dateTime = _dateFormat.parse(_editingController.text);
     _applicationState.notificationList[index].statusBarNotification.getPostTime = dateTime.millisecondsSinceEpoch;
-    await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(_applicationState.toMap())});
+    await _saveAppState(_applicationState);
 
     setState(() {
       _isEditing = false;
@@ -377,7 +394,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _deleteItem(int index) async {
     _applicationState.notificationList.removeAt(index);
-    await _storageChannel.invokeMethod('write', {'fileName': 'AppState', 'bytes': serialize(_applicationState.toMap())});
+    await _saveAppState(_applicationState);
     setState(() {
       _applicationState = _applicationState;
     });
