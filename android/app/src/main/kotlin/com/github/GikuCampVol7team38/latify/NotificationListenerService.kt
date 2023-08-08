@@ -12,8 +12,6 @@ import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationCompat
 import java.io.File
 import java.util.UUID
-import org.msgpack.core.MessagePack
-import org.msgpack.core.MessageBufferPacker
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -174,10 +172,6 @@ class MyNotificationListenerService : NotificationListenerService() {
             // String: Returns a string representation of the object.
             "statusBarNotificationToString" to sbn?.toString(),
         )
-
-        val packer: MessageBufferPacker = MessagePack.newDefaultBufferPacker()
-        packHelper(packer, map)
-
         val rawNotificationFolder = File(this.filesDir, "raw")
 
         if (!rawNotificationFolder.exists()) {
@@ -185,50 +179,11 @@ class MyNotificationListenerService : NotificationListenerService() {
         }
 
         val file = File(rawNotificationFolder, UUID.randomUUID().toString())
-        file.writeBytes(packer.toByteArray())
+        file.writeBytes(MyMessagePack.pack(map))
 
         val notification = sbn?.notification
 
         sendMyNotification(packageName, notification)
-    }
-
-    private fun packHelper(packer: MessageBufferPacker, map: Map<String, Any?>) {
-        packer.packMapHeader(map.size)
-        for ((key, value) in map) {
-            packer.packString(key)
-            when (value) {
-                null -> packer.packNil()
-                is Boolean -> packer.packBoolean(value)
-                is Byte -> packer.packByte(value)
-                is Short -> packer.packShort(value)
-                is Int -> packer.packInt(value)
-                is Long -> packer.packLong(value)
-                is Float -> packer.packFloat(value)
-                is Double -> packer.packDouble(value)
-                is String -> packer.packString(value)
-                is ByteArray -> packer.packBinaryHeader(value.size).writePayload(value)
-                is Map<*, *> -> packHelper(packer, value as Map<String, Any?>)
-                is List<*> -> {
-                    packer.packArrayHeader(value.size)
-                    for (item in value) {
-                        when (item) {
-                            null -> packer.packNil()
-                            is Boolean -> packer.packBoolean(item)
-                            is Byte -> packer.packByte(item)
-                            is Short -> packer.packShort(item)
-                            is Int -> packer.packInt(item)
-                            is Long -> packer.packLong(item)
-                            is Float -> packer.packFloat(item)
-                            is Double -> packer.packDouble(item)
-                            is String -> packer.packString(item)
-                            is ByteArray -> packer.packBinaryHeader(item.size).writePayload(item)
-                            else -> throw Exception("Unsupported type: ${item::class.java}")
-                        }
-                    }
-                }
-                else -> throw Exception("Unsupported type: ${value::class.java}")
-            }
-        }
     }
 
     private fun sendMyNotification(packageName: String, notification: Notification?) {
