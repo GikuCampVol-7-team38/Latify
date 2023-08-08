@@ -208,12 +208,15 @@ class _MyHomePageState extends State<MyHomePage> {
     _checkPermission();
     _reloadNotification();
 
-    _lifecycleChannel.setMethodCallHandler((MethodCall methodCall) {
-      if (methodCall.method == 'activityResumed') {
-        return _reloadNotification();
-      }
-      return Future.value();
-    });
+    try{
+      _lifecycleChannel.setMethodCallHandler((MethodCall methodCall) {
+        if (methodCall.method == 'activityResumed') {
+          return _reloadNotification();
+        }
+        return Future.value();
+      });
+    } on PlatformException catch (_) {
+    }
   }
 
   void _navigateToNotionPage(){
