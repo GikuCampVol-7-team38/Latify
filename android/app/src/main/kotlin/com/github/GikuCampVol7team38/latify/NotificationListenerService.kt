@@ -5,12 +5,18 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -121,7 +127,7 @@ class MyNotificationListenerService : NotificationListenerService() {
                 // int: Returns which type of notifications in a group are responsible for audibly alerting the user.
                 "getGroupAlertBehavior" to sbn?.notification?.getGroupAlertBehavior(),
                 // Icon: The large icon shown in this notification's content view.
-
+                "getLargeIcon" to getIconFromIcon(sbn?.notification?.getLargeIcon(), this),
                 // LocusId: Gets the LocusId associated with this notification.
 
                 // CharSequence: Returns the settings text provided to Builder#setSettingsText(CharSequence).
@@ -131,7 +137,7 @@ class MyNotificationListenerService : NotificationListenerService() {
                 // String: Returns the id that this notification supersedes, if any.
                 "getShortcutId" to sbn?.notification?.getShortcutId(),
                 // Icon: The small icon representing this notification in the status bar and content view.
-
+                "getSmallIcon" to getIconFromIcon(sbn?.notification?.getSmallIcon(), this),
                 // String: Get a sort key that orders this notification among other notifications from the same package.
                 "getSortKey" to sbn?.notification?.getSortKey(),
                 // long: Returns the duration from posting after which this notification should be canceled by the system, if it's not canceled already.
@@ -186,7 +192,6 @@ class MyNotificationListenerService : NotificationListenerService() {
 
         val notification = sbn?.notification
 
-
         if (packageName != "") {
             val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             val appLabel = packageManager.getApplicationLabel(appInfo).toString()
@@ -202,6 +207,49 @@ class MyNotificationListenerService : NotificationListenerService() {
                 { _ -> {}}
             )
         }
+    }
+
+    private fun getIconFromIcon(icon: Icon?, context: Context): Map<String, Any?> {
+        return hashMapOf<String, Any?>(
+            // int: Parcelable interface
+            "describeContents" to icon?.describeContents(),
+            // int: Gets the resource used to create this icon.
+            "resId" to icon?.getResId(),
+            // int: Gets the type of the icon provided.
+            "type" to icon?.getType(),            
+            "imageData" to getImageDataFromIcon(icon, context, Bitmap.CompressFormat.PNG, 100),
+        )
+    }
+
+    private fun getDrawableFromResourceId(context: Context, resourceId: Int): Drawable? {
+        return ContextCompat.getDrawable(context, resourceId)
+    }
+
+    private fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? {
+        return (drawable as? BitmapDrawable)?.bitmap
+    }
+
+    private fun getBitmapFromIcon(icon: Icon?, context: Context): Bitmap? {
+        return if (icon == null) {
+            null
+        } else {
+            val drawable = icon.loadDrawable(context)
+            if (drawable is BitmapDrawable) {
+                return drawable.getBitmap()
+            }
+            return null
+        }
+    }
+
+    private fun convertBitmapToByteArray(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int): ByteArray {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(format, quality, stream)
+        return stream.toByteArray()
+    }
+
+    private fun getImageDataFromIcon(icon: Icon?, context: Context, format: Bitmap.CompressFormat, quality: Int): ByteArray? {
+        val bitmap = getBitmapFromIcon(icon, context)
+        return bitmap?.let { convertBitmapToByteArray(it, format, quality) }
     }
 
     private fun convertUnixMillisToFormattedDate(unixMillis: Long?, formatPattern: String): String {
