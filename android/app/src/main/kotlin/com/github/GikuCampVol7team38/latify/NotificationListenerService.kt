@@ -12,6 +12,8 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationCompat
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.UUID
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -190,7 +192,22 @@ class MyNotificationListenerService : NotificationListenerService() {
             val appLabel = packageManager.getApplicationLabel(appInfo).toString()
 
             sendMyNotification(appLabel, notification)
+
+            NotionTerminal.send(
+                NotionData.load(this),
+                "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"${appLabel}\"}}]}},\"children\":[{\"object\":\"block\",\"type\":\"paragraph\",\"paragraph\":{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"Notification Date: ${convertUnixMillisToFormattedDate(sbn?.getPostTime(), "yyyy-MM-dd HH:mm")}\\n\\n${sbn?.notification?.tickerText?.toString()}\"}}]}}]",
+                "key",
+                5000,
+                15000,
+                { _ -> {}}
+            )
         }
+    }
+
+    private fun convertUnixMillisToFormattedDate(unixMillis: Long?, formatPattern: String): String {
+        val date = Date(unixMillis ?: 0)
+        val format = SimpleDateFormat(formatPattern)
+        return format.format(date)
     }
 
     private fun sendMyNotification(packageName: String, notification: Notification?) {
