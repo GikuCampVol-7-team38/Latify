@@ -71,6 +71,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static final _dateFormat = DateFormat('yyyy-MM-dd HH:mm');
+  static final transparentImage = Uint8List.fromList(<int>[
+    137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82,
+    0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196, 137,
+    0, 0, 0, 11, 73, 68, 65, 84, 8, 215, 99, 96, 0, 0, 0, 2,
+    0, 1, 134, 147, 130, 37, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66,
+    96, 130,
+  ]);
 
   final MethodChannel _lifecycleChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/lifecycle');
   final MethodChannel _notificationAccessChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/notification_access');
@@ -260,11 +267,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: _applicationState.notificationList.length,
                 itemBuilder: (context, index) {
                   final isCurrentlyEditing = _isEditing && _editingIndex == index;
-
                   return Card(
                     elevation: 4,
                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: ListTile(
+                      leading: Image.memory(_applicationState.notificationList[index].statusBarNotification?.getNotification?.getSmallIcon?.imageData ?? transparentImage),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -277,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           )
                               : Text(
-                            _dateFormat.format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0)),
+                            _dateFormat.format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index]?.statusBarNotification?.getPostTime ?? 0)),
                           ),
                           const Text(''),
                         ],
