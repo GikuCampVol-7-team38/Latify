@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class Action {
   Map<String, Object?>? toMap() {
     return null;
@@ -145,22 +147,46 @@ class CharSequence {
 }
 
 class Icon {
+  // Parcelable interface
+  int? describeContents;
+
+  // Gets the resource used to create this icon.
+  int? resId;
+
+  // Gets the type of the icon provided.
+  int? type;
+
+  Uint8List? imageData;
+
   Map<String, Object?>? toMap() {
-    return null;
+    return {
+      'describeContents': describeContents,
+      'resId': resId,
+      'type': type,
+      'imageData': imageData,
+    };
   }
 
   static Icon? fromDynamic(dynamic map) {
     if (map is! Map<dynamic, dynamic>) {
       return null;
     }
-    return Icon();
+    return Icon()
+        ..describeContents = map['describeContents']
+        ..resId = map['resId']
+        ..type = map['type']
+        ..imageData = map['imageData'];
   }
 
   static Icon? fromMap(Map<Object?, Object?>? map) {
     if (map == null) {
       return null;
     }
-    return Icon();
+    return Icon()
+        ..describeContents = map['describeContents'] is int ? map['describeContents'] as int : null
+        ..resId = map['resId'] is int ? map['resId'] as int : null
+        ..type = map['type'] is int ? map['type'] as int : null
+        ..imageData = map['imageData'] is Uint8List ? map['imageData'] as Uint8List : null;
   }
 }
 
@@ -313,6 +339,9 @@ class Notification {
   // Returns the id that this notification supersedes, if any.
   int? getShortcutId;
 
+  // The small icon representing this notification in the status bar and content view.
+  Icon? getSmallIcon;
+
   // Get a sort key that orders this notification among other notifications from the same package.
   String? getSortKey;
 
@@ -367,6 +396,7 @@ class Notification {
       'getLocusId': getLocusId?.toMap(),
       'getSettingsText': getSettingsText?.toMap(),
       'getShortcutId': getShortcutId,
+      'getSmallIcon': getSmallIcon?.toMap(),
       'getSortKey': getSortKey,
       'getTimeoutAfter': getTimeoutAfter,
       'hasImage': hasImage,
@@ -424,6 +454,7 @@ class Notification {
       ..getLocusId = LocusId.fromDynamic(map['getLocusId'])
       ..getSettingsText = CharSequence.fromDynamic(map['getSettingsText'])
       ..getShortcutId = map['getShortcutId']
+      ..getSmallIcon = Icon.fromDynamic(map['getSmallIcon'])
       ..getSortKey = map['getSortKey']
       ..getTimeoutAfter = map['getTimeoutAfter']
       ..hasImage = map['hasImage']
@@ -480,6 +511,7 @@ class Notification {
       ..getLocusId = LocusId.fromMap(map['getLocusId'] is Map<Object?, Object?> ? map['getLocusId'] as Map<Object?, Object?> : null)
       ..getSettingsText = CharSequence.fromMap(map['getSettingsText'] is Map<Object?, Object?> ? map['getSettingsText'] as Map<Object?, Object?> : null)
       ..getShortcutId = map['getShortcutId'] is int ? map['getShortcutId'] as int : null
+      ..getSmallIcon = Icon.fromMap(map['getSmallIcon'] is Map<Object?, Object?> ? map['getSmallIcon'] as Map<Object?, Object?> : null)
       ..getSortKey = map['getSortKey'] is String ? map['getSortKey'] as String : null
       ..getTimeoutAfter = map['getTimeoutAfter'] is int ? map['getTimeoutAfter'] as int : null
       ..hasImage = map['hasImage'] is bool ? map['hasImage'] as bool : null
