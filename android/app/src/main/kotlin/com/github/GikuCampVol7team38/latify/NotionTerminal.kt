@@ -48,7 +48,7 @@ class NotionTerminal{
                 setRequestProperty("Notion-Version", "2021-08-16")
 
                 OutputStreamWriter(outputStream, Charsets.UTF_8).use {
-                    it.write("{\"parent\":{\"database_id\":\"$databaseID\"},\"properties\":$json}")
+                    it.write("{\"parent\":{\"database_id\":\"$databaseID\"},$json}")
                     it.flush()
                 }
 
