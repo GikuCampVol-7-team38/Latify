@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -183,7 +184,13 @@ class MyNotificationListenerService : NotificationListenerService() {
 
         val notification = sbn?.notification
 
-        sendMyNotification(packageName, notification)
+
+        if (packageName != "") {
+            val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            val appLabel = packageManager.getApplicationLabel(appInfo).toString()
+
+            sendMyNotification(appLabel, notification)
+        }
     }
 
     private fun sendMyNotification(packageName: String, notification: Notification?) {
