@@ -80,7 +80,7 @@ class _NotionWidgetState extends State<NotionWidget> {
     try {
       return _notion.invokeMethod('send', {
             'databaseKey': 'key',
-            'json': jsonEncode({'properties': {'title': {'title': [{'text': {'content': title}}]}}, })
+            'json': '"properties":${jsonEncode({'title': {'title': [{'text': {'content': title}}]}},)}'
       }).then((value) {
         if (value is bool) {
           return value;
