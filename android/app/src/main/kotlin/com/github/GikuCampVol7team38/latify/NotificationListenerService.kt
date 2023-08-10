@@ -26,6 +26,10 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MyNotificationListenerService : NotificationListenerService() {
+
+    companion object {
+        const val NOTIFICATION_LISTENER_ACTION = "com.github.GikuCampVol7team38.latify.NOTIFICATION_LISTENER_ACTION"
+    }
     private val CHANNEL_ID = "MyChannel"
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
@@ -189,6 +193,9 @@ class MyNotificationListenerService : NotificationListenerService() {
 
         val file = File(rawNotificationFolder, UUID.randomUUID().toString())
         file.writeBytes(MyMessagePack.pack(map))
+
+        val intent = Intent(NOTIFICATION_LISTENER_ACTION)
+        sendBroadcast(intent)
 
         val notification = sbn?.notification
 

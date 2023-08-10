@@ -2,8 +2,10 @@ package com.github.GikuCampVol7team38.latify
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.AlarmClock
@@ -26,6 +28,14 @@ class MainActivity: FlutterActivity() {
 
     private lateinit var lifecycleMethodChannel: MethodChannel
 
+    private val notificationListenerReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == MyNotificationListenerService.NOTIFICATION_LISTENER_ACTION) {
+                lifecycleMethodChannel.invokeMethod("activityResumed", null)
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         println("onResume")
@@ -38,6 +48,10 @@ class MainActivity: FlutterActivity() {
 
         lifecycleMethodChannel = MethodChannel(flutterEngine.dartExecutor, LIFECYCLE_CHANNEL)
         lifecycleMethodChannel.invokeMethod("activityResumed", null)
+
+        val filter = IntentFilter()
+        filter.addAction(MyNotificationListenerService.NOTIFICATION_LISTENER_ACTION)
+        registerReceiver(notificationListenerReceiver, filter)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ALARM_CHANNEL).setMethodCallHandler {
                 call, result ->
