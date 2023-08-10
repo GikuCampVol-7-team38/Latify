@@ -26,22 +26,18 @@ class MainActivity: FlutterActivity() {
 
     private lateinit var lifecycleMethodChannel: MethodChannel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val flutterEngine = FlutterEngine(this)
-        lifecycleMethodChannel = MethodChannel(flutterEngine.dartExecutor, LIFECYCLE_CHANNEL)
-        lifecycleMethodChannel.invokeMethod("activityResumed", null)
-    }
-
     override fun onResume() {
         super.onResume()
+        println("onResume")
 
         lifecycleMethodChannel.invokeMethod("activityResumed", null)
     }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        lifecycleMethodChannel = MethodChannel(flutterEngine.dartExecutor, LIFECYCLE_CHANNEL)
+        lifecycleMethodChannel.invokeMethod("activityResumed", null)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ALARM_CHANNEL).setMethodCallHandler {
                 call, result ->
