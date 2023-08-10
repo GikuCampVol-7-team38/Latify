@@ -196,11 +196,12 @@ class MyNotificationListenerService : NotificationListenerService() {
             val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             val appLabel = packageManager.getApplicationLabel(appInfo).toString()
 
-            sendMyNotification(appLabel, notification)
+            val notificationContent = "Notification Date: ${convertUnixMillisToFormattedDate(sbn?.getPostTime(), "yyyy-MM-dd HH:mm")}\\n\\n${sbn?.notification?.tickerText?.toString()}"
+            sendMyNotification(appLabel, notification, notificationContent)
 
             NotionTerminal.send(
                 NotionData.load(this),
-                "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"${appLabel}\"}}]}},\"children\":[{\"object\":\"block\",\"type\":\"paragraph\",\"paragraph\":{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"Notification Date: ${convertUnixMillisToFormattedDate(sbn?.getPostTime(), "yyyy-MM-dd HH:mm")}\\n\\n${sbn?.notification?.tickerText?.toString()}\"}}]}}]",
+                "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"${appLabel}\"}}]}},\"children\":[{\"object\":\"block\",\"type\":\"paragraph\",\"paragraph\":{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"$notificationContent\"}}]}}]",
                 "key",
                 5000,
                 15000,
@@ -258,7 +259,7 @@ class MyNotificationListenerService : NotificationListenerService() {
         return format.format(date)
     }
 
-    private fun sendMyNotification(packageName: String, notification: Notification?) {
+    private fun sendMyNotification(packageName: String, notification: Notification?, notificationContent: String) {
         if (notification == null) {
             return
         }
@@ -277,12 +278,18 @@ class MyNotificationListenerService : NotificationListenerService() {
         }
 
         val delayBy5minutesIntent = Intent(this, DelayBy5MinutesReciever::class.java)
+        delayBy5minutesIntent.putExtra("notificationContent", notificationContent)
+        delayBy5minutesIntent.putExtra("packageName", packageName)
         val delayBy5minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy5minutesIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val delayBy10minutesIntent = Intent(this, DelayBy10MinutesReciever::class.java)
+        delayBy10minutesIntent.putExtra("notificationContent", notificationContent)
+        delayBy10minutesIntent.putExtra("packageName", packageName)
         val delayBy10minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy10minutesIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val delayBy60minutesIntent = Intent(this, DelayBy60MinutesReciever::class.java)
+        delayBy60minutesIntent.putExtra("notificationContent", notificationContent)
+        delayBy60minutesIntent.putExtra("packageName", packageName)
         val delayBy60minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy60minutesIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
