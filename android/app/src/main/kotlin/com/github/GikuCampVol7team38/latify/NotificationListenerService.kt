@@ -219,7 +219,7 @@ class MyNotificationListenerService : NotificationListenerService() {
 
             NotionTerminal.send(
                 NotionData.load(this),
-                NotionTemplate.applyDynamicTemplate(NotionTemplate.getRecieved(this), map),
+                NotionTemplate.applyDynamicTemplate(NotionTemplate.getReceived(this), map),
                 "key",
                 5000,
                 15000,

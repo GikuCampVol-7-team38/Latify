@@ -14,7 +14,7 @@ class  NotionTemplate {
             return result
         }
 
-        fun getRecieved(context: Context): String {
+        fun getReceived(context: Context): String {
             val default =
                 "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"\${notificationContent}\"}}]}," +
                         "\"タグ\":{\"type\":\"multi_select\",\"multi_select\":[{\"name\":\"\${appName}\"}]}}," +
