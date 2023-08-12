@@ -25,6 +25,7 @@ class MainActivity: FlutterActivity() {
     private val STORAGE_CHANNNEL = "com.github.GeekCampVol7team38.latify/storage";
     private val PACKAGE_MANAGER_CHANNNEL = "com.github.GeekCampVol7team38.latify/packageManager";
     private val NOTION_CHANNNEL = "com.github.GeekCampVol7team38.latify/notion";
+    private val NOTION_TEMPLATE_CHANNNEL = "com.github.GeekCampVol7team38.latify/notionTemplate";
 
     private lateinit var lifecycleMethodChannel: MethodChannel
 
@@ -242,6 +243,61 @@ class MainActivity: FlutterActivity() {
                     }
                     val notionData = NotionData.load(this)
                     result.success(notionData.databaseIDMap[databaseKey])
+                }
+                else -> result.notImplemented()
+            }
+        }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NOTION_TEMPLATE_CHANNNEL).setMethodCallHandler {
+                call, result ->
+            when (call.method) {
+                "getReceived" -> {
+                    result.success(NotionTemplate.getReceived(this))
+                }
+                "getLeftButton" -> {
+                    result.success(NotionTemplate.getLeftButton(this))
+                }
+                "getMiddleButton" -> {
+                    result.success(NotionTemplate.getMiddleButton(this))
+                }
+                "getRightButton" -> {
+                    result.success(NotionTemplate.getRightButton(this))
+                }
+                "setReceived" -> {
+                    val template = call.argument<String>("template") ?: ""
+                    if (template == "") {
+                        result.success(false)
+                        return@setMethodCallHandler
+                    }
+                    NotionTemplate.setRecieved(this, template)
+                    result.success(true)
+                }
+                "setLeftButton" -> {
+                    val template = call.argument<String>("template") ?: ""
+                    if (template == "") {
+                        result.success(false)
+                        return@setMethodCallHandler
+                    }
+                    NotionTemplate.setLeftButton(this, template)
+                    result.success(true)
+                }
+                "setMiddleButton" -> {
+                    val template = call.argument<String>("template") ?: ""
+                    if (template == "") {
+                        result.success(false)
+                        return@setMethodCallHandler
+                    }
+                    NotionTemplate.setMiddleButton(this, template)
+                    result.success(true)
+                }
+                "setRightButton" -> {
+                    val template = call.argument<String>("template") ?: ""
+                    if (template == "") {
+                        result.success(false)
+                        return@setMethodCallHandler
+                    }
+                    NotionTemplate.setRightButton(this, template)
+                    result.success(true)
                 }
                 else -> result.notImplemented()
             }
