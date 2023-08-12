@@ -6,6 +6,15 @@ import java.io.File
 class  NotionTemplate {
 
     companion object {
+        fun applyDynamicTemplate(template: String, values: Map<String, String>): String {
+            var result = template
+            for ((key, value) in values) {
+                result = result.replace("\${$key}", value)
+            }
+            println(result)
+            return result
+        }
+
         fun getRecieved(context: Context): String {
             val default =
                 "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"\${notificationContent}\"}}]}," +
