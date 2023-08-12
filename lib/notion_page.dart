@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'notion_widget.dart';
+import 'notion_template_setting_widget.dart';
 
 class NotionPage extends StatelessWidget {
   const NotionPage({super.key});
@@ -10,7 +11,7 @@ class NotionPage extends StatelessWidget {
     return Theme(
       data: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: Colors.blue,
+          primarySwatch: Colors.blue,
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
@@ -21,14 +22,22 @@ class NotionPage extends StatelessWidget {
         ),
       ),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Notion Integration'),
-          elevation: 0,
-        ),
-        body: const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: NotionWidget(),
-        ),
+          appBar: AppBar(
+            title: const Text('Notion Setting'),
+            elevation: 0,
+          ),
+          body:
+          const Scrollbar(
+            child: SingleChildScrollView(
+              child:
+              Column(
+                children: [
+                  NotionWidget(),
+                  NotionTemplateSettingWidget(),
+                ],
+              ),
+            ),
+          )
       ),
     );
   }
