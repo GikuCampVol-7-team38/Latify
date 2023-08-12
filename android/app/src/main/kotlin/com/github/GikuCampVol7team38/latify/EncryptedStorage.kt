@@ -15,10 +15,18 @@ class EncryptedStorage {
             return DataEncryptor().decryptBytes(encryptedData, iv)
         }
 
+        fun readString(file: File): String {
+            return String(readBytes(file), Charsets.UTF_8)
+        }
+
         fun writeBytes(file: File, bytes: ByteArray) {
             val (encryptedData, iv) = DataEncryptor().encryptBytes(bytes)
             val encryptedBytes = iv + encryptedData
             file.writeBytes(encryptedBytes)
+        }
+
+        fun writeString(file: File, string: String) {
+            writeBytes(file, string.toByteArray(Charsets.UTF_8))
         }
     }
 }
