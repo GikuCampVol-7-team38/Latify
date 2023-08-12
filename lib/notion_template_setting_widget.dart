@@ -167,9 +167,6 @@ class _NotionTemplateSettingWidget extends State<NotionTemplateSettingWidget> {
                         onChanged: (value) {
                           _setReceivedTemplate(value);
                         },
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your API key',
-                        ),
                       );
                     }  else {
                       return const CircularProgressIndicator();
@@ -201,9 +198,6 @@ class _NotionTemplateSettingWidget extends State<NotionTemplateSettingWidget> {
                           FilteringTextInputFormatter.deny(RegExp('[\n\r]')),
                         ],
                         controller: _leftButtonTemplateController,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your Database ID or URL',
-                        ),
                         onChanged: (value) {
                           _setLeftButtonTemplate(value);
                         },
@@ -238,9 +232,6 @@ class _NotionTemplateSettingWidget extends State<NotionTemplateSettingWidget> {
                           FilteringTextInputFormatter.deny(RegExp('[\n\r]')),
                         ],
                         controller: _middleButtonTemplateController,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your Database ID or URL',
-                        ),
                         onChanged: (value) {
                           _setMiddleButtonTemplate(value);
                         },
@@ -275,9 +266,6 @@ class _NotionTemplateSettingWidget extends State<NotionTemplateSettingWidget> {
                           FilteringTextInputFormatter.deny(RegExp('[\n\r]')),
                         ],
                         controller: _rightButtonTemplateController,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your Database ID or URL',
-                        ),
                         onChanged: (value) {
                           _setRightButtonTemplate(value);
                         },
