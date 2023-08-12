@@ -34,20 +34,20 @@ class NotionData {
         val encryptedDatabaseIDMap = mutableMapOf<String, MutableMap<String, ByteArray>>()
         for ((key, value) in databaseIDMap) {
             val map = mutableMapOf<String, ByteArray>()
-            dataEncryptor.encrypt(value).let { (encrypted, iv) ->
+            dataEncryptor.encryptString(value).let { (encrypted, iv) ->
                 map["encryptedDatabaseID"] = encrypted
                 map["iv"] = iv
             }
             encryptedDatabaseIDMap[key] = map
         }
-        dataEncryptor.encrypt(ApiKey).let { (encrypted, iv) ->
+        dataEncryptor.encryptString(ApiKey).let { (encrypted, iv) ->
         return EncryptedData(encrypted, iv, encryptedDatabaseIDMap)
         }
     }
 
     private fun decrypt(encryptedData: EncryptedData) {
         val dataEncryptor = DataEncryptor()
-        dataEncryptor.decrypt(encryptedData.encryptedApiKey, encryptedData.iv).let {
+        dataEncryptor.decryptString(encryptedData.encryptedApiKey, encryptedData.iv).let {
             ApiKey = it
         }
         for ((key, value) in encryptedData.encryptedDatabaseIDMap) {
@@ -56,7 +56,7 @@ class NotionData {
             if (encryptedDatabaseID == null || iv == null) {
                 continue
             }
-            dataEncryptor.decrypt(encryptedDatabaseID, iv).let {
+            dataEncryptor.decryptString(encryptedDatabaseID, iv).let {
                 databaseIDMap[key] = it
             }
         }

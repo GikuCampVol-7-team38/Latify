@@ -41,19 +41,26 @@ class DataEncryptor {
         return keyStore.getKey(KEY_ALIAS, null) as SecretKey
     }
 
-    fun encrypt(apiKey: String): Pair<ByteArray, ByteArray> {
+    fun encryptString(string: String): Pair<ByteArray, ByteArray> {
+        return encryptBytes(string.toByteArray(Charset.forName("UTF-8")))
+    }
+
+    fun encryptBytes(bytes: ByteArray): Pair<ByteArray, ByteArray> {
         val cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM)
         cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
         val iv = cipher.iv
-        val encryptedData = cipher.doFinal(apiKey.toByteArray(Charset.forName("UTF-8")))
+        val encryptedData = cipher.doFinal(bytes)
         return Pair(encryptedData, iv)
     }
 
-    fun decrypt(encryptedData: ByteArray, iv: ByteArray): String {
+    fun decryptString(encryptedData: ByteArray, iv: ByteArray): String {
+        return String(decryptBytes(encryptedData, iv), Charset.forName("UTF-8"))
+    }
+
+    fun decryptBytes(encryptedData: ByteArray, iv: ByteArray): ByteArray {
         val cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM)
         val spec = IvParameterSpec(iv)
         cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
-        val decryptedData = cipher.doFinal(encryptedData)
-        return String(decryptedData, Charset.forName("UTF-8"))
+        return cipher.doFinal(encryptedData)
     }
 }
