@@ -11,7 +11,6 @@ class  NotionTemplate {
             for ((key, value) in values) {
                 result = result.replace("\${$key}", value)
             }
-            println(result)
             return result
         }
 
@@ -33,10 +32,10 @@ class  NotionTemplate {
             return str
         }
 
-        private val defaultButtonPressedTemplate = "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"\${buttonName}\"}}]}," +
-                "\"タグ\":{\"type\":\"multi_select\",\"multi_select\":[{\"name\":\"\${appName}\"}]}}," +
+        private val defaultButtonPressedTemplate = "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"\${notificationContent}\"}}]}," +
+                "\"タグ\":{\"type\":\"multi_select\",\"multi_select\":[{\"name\":\"\${buttonName}\"}]}}," +
                 "\"children\":[{\"object\":\"block\",\"type\":\"paragraph\",\"paragraph\":" +
-                "{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"Notification Date: \${postDate}\\n\\n\${notificationContent}\\n\"}}]}}]"
+                "{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"Presse Date: \${pressDate}\\nNotification Date: \${postDate}\\n\"}}]}}]"
 
         fun getLeftButton(context: Context): String {
             val file = File(context.filesDir, "LeftButton")
