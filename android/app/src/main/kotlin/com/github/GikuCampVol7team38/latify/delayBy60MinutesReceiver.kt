@@ -7,14 +7,17 @@ import java.time.LocalDateTime
 
 class DelayBy60MinutesReciever : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val content = "Pressed: Delay by an hour button\\nPressed Date: ${LocalDateTime.now()}\\n${intent.getStringExtra("notificationContent")}"
+        val map = hashMapOf<String, String>(
+            "buttonName" to "DelayByAnHour",
+            "pressDate" to LocalDateTime.now().toString(),
+        )
         NotionTerminal.send(
-                NotionData.load(context),
-                "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"${intent.getStringExtra("packageName")}\"}}]}},\"children\":[{\"object\":\"block\",\"type\":\"paragraph\",\"paragraph\":{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"$content\"}}]}}]",
-                "key",
-                5000,
-                15000,
-                { _ -> {}}
-            )
+            NotionData.load(context),
+            NotionTemplate.applyDynamicTemplate(intent.getStringExtra("msg") ?: "", map),
+            "key",
+            5000,
+            15000,
+            { _ -> {}}
+        )
     }
 }

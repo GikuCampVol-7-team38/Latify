@@ -203,12 +203,23 @@ class MyNotificationListenerService : NotificationListenerService() {
             val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             val appLabel = packageManager.getApplicationLabel(appInfo).toString()
 
-            val notificationContent = "Notification Date: ${convertUnixMillisToFormattedDate(sbn?.getPostTime(), "yyyy-MM-dd HH:mm")}\\n\\n${sbn?.notification?.tickerText?.toString()}"
-            sendMyNotification(appLabel, notification, notificationContent)
+            val map = hashMapOf<String, String>(
+                "appName" to appLabel,
+                "postDate" to convertUnixMillisToFormattedDate(sbn?.postTime, "yyyy-MM-dd HH:mm:ss"),
+                "notificationContent" to (sbn?.notification?.tickerText?.toString() ?: ""),
+            )
+
+            sendMyNotification(
+                appLabel,
+                notification,
+                NotionTemplate.applyDynamicTemplate(NotionTemplate.getLeftButton(this), map),
+                NotionTemplate.applyDynamicTemplate(NotionTemplate.getMiddleButton(this), map),
+                NotionTemplate.applyDynamicTemplate(NotionTemplate.getRightButton(this), map),
+                )
 
             NotionTerminal.send(
                 NotionData.load(this),
-                "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"${appLabel}\"}}]}},\"children\":[{\"object\":\"block\",\"type\":\"paragraph\",\"paragraph\":{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"$notificationContent\"}}]}}]",
+                NotionTemplate.applyDynamicTemplate(NotionTemplate.getRecieved(this), map),
                 "key",
                 5000,
                 15000,
@@ -266,7 +277,7 @@ class MyNotificationListenerService : NotificationListenerService() {
         return format.format(date)
     }
 
-    private fun sendMyNotification(packageName: String, notification: Notification?, notificationContent: String) {
+    private fun sendMyNotification(packageName: String, notification: Notification?, leftMsg: String, middleMsg: String, rightMsg: String) {
         if (notification == null) {
             return
         }
@@ -285,18 +296,15 @@ class MyNotificationListenerService : NotificationListenerService() {
         }
 
         val delayBy5minutesIntent = Intent(this, DelayBy5MinutesReciever::class.java)
-        delayBy5minutesIntent.putExtra("notificationContent", notificationContent)
-        delayBy5minutesIntent.putExtra("packageName", packageName)
+        delayBy5minutesIntent.putExtra("msg", leftMsg)
         val delayBy5minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy5minutesIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val delayBy10minutesIntent = Intent(this, DelayBy10MinutesReciever::class.java)
-        delayBy10minutesIntent.putExtra("notificationContent", notificationContent)
-        delayBy10minutesIntent.putExtra("packageName", packageName)
+        delayBy10minutesIntent.putExtra("msg", middleMsg)
         val delayBy10minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy10minutesIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val delayBy60minutesIntent = Intent(this, DelayBy60MinutesReciever::class.java)
-        delayBy60minutesIntent.putExtra("notificationContent", notificationContent)
-        delayBy60minutesIntent.putExtra("packageName", packageName)
+        delayBy60minutesIntent.putExtra("msg", rightMsg)
         val delayBy60minutesPendingIntent = PendingIntent.getBroadcast(this, 0, delayBy60minutesIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
