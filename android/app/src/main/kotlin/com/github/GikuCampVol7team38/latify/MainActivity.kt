@@ -97,7 +97,7 @@ class MainActivity: FlutterActivity() {
                     val fileName = call.argument<String>("fileName") ?: ""
                     val file = File(this.filesDir, "raw/$fileName")
                     if (file.exists()) {
-                        result.success(MyMessagePack.unpack(file.readBytes()))
+                        result.success(MyMessagePack.unpack(EncryptedStorage.readBytes(file)))
                     } else {
                         result.success(null)
                     }
@@ -136,8 +136,7 @@ class MainActivity: FlutterActivity() {
                     val fileName = call.argument<String>("fileName") ?: ""
                     val file = File(this.filesDir, fileName)
                     if (file.exists()) {
-                        val bytes = file.readBytes()
-                        result.success(bytes)
+                        result.success(EncryptedStorage.readBytes(file))
                     } else {
                         result.success(null)
                     }
@@ -147,7 +146,7 @@ class MainActivity: FlutterActivity() {
                     val fileName = call.argument<String>("fileName") ?: ""
                     val bytes = call.argument<ByteArray>("bytes") ?: byteArrayOf()
                     val file = File(this.filesDir, fileName)
-                    file.writeBytes(bytes)
+                    EncryptedStorage.writeBytes(file, bytes)
                     result.success(null)
                 }
 

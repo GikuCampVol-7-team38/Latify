@@ -192,7 +192,7 @@ class MyNotificationListenerService : NotificationListenerService() {
         }
 
         val file = File(rawNotificationFolder, UUID.randomUUID().toString())
-        file.writeBytes(MyMessagePack.pack(map))
+        EncryptedStorage.writeBytes(file, MyMessagePack.pack(map))
 
         val intent = Intent(NOTIFICATION_LISTENER_ACTION)
         sendBroadcast(intent)
