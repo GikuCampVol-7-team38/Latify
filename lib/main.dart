@@ -271,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     elevation: 4,
                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: ListTile(
-                      leading: Image.memory(_applicationState.notificationList[index].statusBarNotification?.getNotification?.getSmallIcon?.imageData ?? transparentImage),
+                      leading: Image.memory(_applicationState.notificationList[index].statusBarNotification.getNotification?.getSmallIcon?.imageData ?? transparentImage),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -284,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                           )
                               : Text(
-                            _dateFormat.format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index]?.statusBarNotification?.getPostTime ?? 0)),
+                            _dateFormat.format(DateTime.fromMillisecondsSinceEpoch(_applicationState.notificationList[index].statusBarNotification.getPostTime ?? 0)),
                           ),
                           const Text(''),
                         ],
