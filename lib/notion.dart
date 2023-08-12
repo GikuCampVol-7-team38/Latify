@@ -27,3 +27,17 @@ Future<bool> addNoteToNotionTable(String notionApiKey, String databaseID, String
     return response.statusCode == 200;
   });
 }
+
+Future<int> checkApiKeyAndDatabaseID(String notionApiKey, String databaseID) {
+  final url = Uri.parse('https://api.notion.com/v1/databases/$databaseID');
+
+  final headers = {
+    'Authorization': 'Bearer $notionApiKey',
+    'Notion-Version': '2021-08-16',
+    'Content-Type': 'application/json',
+  };
+
+  return http.get(url, headers: headers).then((response) {
+    return response.statusCode;
+  });
+}
