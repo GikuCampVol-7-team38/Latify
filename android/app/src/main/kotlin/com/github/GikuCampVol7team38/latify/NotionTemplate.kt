@@ -32,7 +32,7 @@ class  NotionTemplate {
             return str
         }
 
-        private val defaultButtonPressedTemplate = "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"\${notificationContent}\"}}]}," +
+        private const val defaultButtonPressedTemplate = "\"properties\":{\"title\":{\"title\":[{\"text\":{\"content\":\"\${notificationContent}\"}}]}," +
                 "\"タグ\":{\"type\":\"multi_select\",\"multi_select\":[{\"name\":\"\${buttonName}\"}]}}," +
                 "\"children\":[{\"object\":\"block\",\"type\":\"paragraph\",\"paragraph\":" +
                 "{\"text\":[{\"type\":\"text\",\"text\":{\"content\":\"Presse Date: \${pressDate}\\nNotification Date: \${postDate}\\n\"}}]}}]"
