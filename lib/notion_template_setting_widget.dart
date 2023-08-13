@@ -251,7 +251,7 @@ class _NotionTemplateSettingWidget extends State<NotionTemplateSettingWidget> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           child:
           Wrap(
               children: [

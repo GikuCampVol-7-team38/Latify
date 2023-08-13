@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:io' show Platform;
-
-import 'package:flutter/src/foundation/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,11 +13,10 @@ class NotionWidget extends StatefulWidget {
 class _NotionWidgetState extends State<NotionWidget> {
   static const _notion = MethodChannel('com.github.GeekCampVol7team38.latify/notion');
 
-  bool _isSuccess = false;
+  int _statusCode = 200;
   bool _isSent = false;
   bool _isLoading = false;
-  String _notionApiKey = '';
-  String _title = '';
+  final TextEditingController _apiKeyController = TextEditingController();
   final TextEditingController _databaseIdController = TextEditingController();
 
   static Future<String> _getApiKey() {
@@ -76,38 +71,17 @@ class _NotionWidgetState extends State<NotionWidget> {
     }
   }
 
-  static Future<bool> _send(String title) {
-    try {
-      return _notion.invokeMethod('send', {
-            'databaseKey': 'key',
-            'json': '"properties":${jsonEncode({'title': {'title': [{'text': {'content': title}}]}},)}'
-      }).then((value) {
-        if (value is bool) {
-          return value;
-        }
-        return false;
-      });
-    } on PlatformException catch (_) {
-      return Future.value(false);
-    }
-  }
-
-  Future<void> sendToNotion() async {
+  Future<void> _check() async {
     setState((){
       _isSent = true;
       _isLoading = true;
     });
-    _setApiKey(_notionApiKey);
-    _setDatabaseID(_databaseIdController.text);
 
-    if (kIsWeb || !Platform.isAndroid) {
-      _isSuccess = await addNoteToNotionTable(_notionApiKey, _databaseIdController.text, _title);
-    } else {
-      _isSuccess = await _send(_title);
-    }
+    final status = await checkApiKeyAndDatabaseID(await _getApiKey(), _databaseIdController.text);
+
     setState((){
       _isLoading = false;
-      _isSuccess = _isSuccess;
+      _statusCode = status;
     });
   }
 
@@ -124,63 +98,84 @@ class _NotionWidgetState extends State<NotionWidget> {
   }
 
   @override
+  void dispose() {
+    _apiKeyController.dispose();
+    _databaseIdController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('Your API key and Database ID are encrypted and stored locally'),
-        FutureBuilder<String>(
-          future: _getApiKey(),
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return TextFormField(
-                initialValue: snapshot.data,
-                onChanged: (value) {
-                  _notionApiKey = value;
-                },
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: 'Enter your API key',
-                ),
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
+        const Padding(
+          padding:  EdgeInsets.fromLTRB(0, 16, 0, 0),
+          child:
+          Text('API key'),
         ),
-        FutureBuilder<String>(
-          future: _getDatabaseID(),
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              _databaseIdController.text = snapshot.data ?? '';
-              return TextFormField(
-                controller: _databaseIdController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter your Database ID or URL',
-                ),
-                onChanged: (value) {
-                  _parseDatabaseIdFromUrl(); // テキストが変更されるたびにURLをパース
-                },
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
-        ),
-        TextField(
-          onChanged: (value) {
-            _title = value;
-          },
-          decoration: const InputDecoration(
-            hintText: 'Enter the title of the note',
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+          child:
+          FutureBuilder<String>(
+            future: _getApiKey(),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                _apiKeyController.text = snapshot.data ?? '';
+                return TextField(
+                  controller: _apiKeyController,
+                  onChanged: (value) {
+                    _setApiKey(value);
+                  },
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    hintText: 'Enter your API key',
+                  ),
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
           ),
         ),
-        Text(_isSent ? _isLoading ? '' : _isSuccess ? 'Success' : 'Failed' : ''),
-        _isLoading ? const CircularProgressIndicator() : Container(),
-        ElevatedButton(
-          onPressed: _isLoading ? null : sendToNotion,
-          child: const Text('Send to Notion'),
+        const Text('Database ID'),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+          child:
+          FutureBuilder<String>(
+            future: _getDatabaseID(),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                _databaseIdController.text = snapshot.data ?? '';
+                return TextField(
+                  controller: _databaseIdController,
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    hintText: 'Enter your Database ID or URL',
+                  ),
+                  onChanged: (value) {
+                    _parseDatabaseIdFromUrl(); // テキストが変更されるたびにURLをパース
+                    _setDatabaseID(_databaseIdController.text);
+                  },
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
+          ),
         ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
+          child:
+          Text('Your API Key and Database ID are encrypted and stored locally.'),
+        ),
+        ElevatedButton(
+          onPressed: _isLoading ? null : _check,
+          child: const Text('Check API key and Database ID'),
+        ),
+        Text(_isSent ? _isLoading ? '' : _statusCode == 200 ? 'API Key and Database ID are valid.' : _statusCode == 401 ? 'API Key is invalid.' : _statusCode == 400 ? 'Database ID is invalid.' : 'Unknown Error.' : ''),
+        _isLoading ? const CircularProgressIndicator() : Container(),
       ],
     );
   }
