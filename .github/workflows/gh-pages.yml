@@ -26,6 +26,14 @@ jobs:
         with:
           flutter-version: '3.10.6'
 
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
       - name: Build Web
         run: flutter build web --base-href /${{ env.REPOSITORY }}/
 
