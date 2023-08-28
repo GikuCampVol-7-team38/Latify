@@ -310,7 +310,7 @@ class MyNotificationListenerService : NotificationListenerService() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("New notification from $packageName")
             .setContentText(notification.tickerText)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_notify)
             .addAction(R.mipmap.ic_launcher, "Delay by 5 minutes", delayBy5minutesPendingIntent)
             .addAction(R.mipmap.ic_launcher, "Delay by 10 minutes", delayBy10minutesPendingIntent)
             .addAction(R.mipmap.ic_launcher, "Delay by an hour", delayBy60minutesPendingIntent)
