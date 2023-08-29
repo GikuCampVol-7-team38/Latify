@@ -6,9 +6,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
+import android.graphics.drawable.VectorDrawable
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -255,6 +257,14 @@ class MyNotificationListenerService : NotificationListenerService() {
             val drawable = icon.loadDrawable(context)
             if (drawable is BitmapDrawable) {
                 return drawable.getBitmap()
+            }
+            else if(drawable is VectorDrawable){
+                val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
+                        drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                drawable.draw(canvas)
+                return bitmap
             }
             return null
         }
