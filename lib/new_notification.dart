@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'marshalling_data.dart' as marshalling_data;
+import 'notification_data.dart';
 
 class NewNotification{
   static const _notificationReceiver = MethodChannel('com.github.GeekCampVol7team38.latify/notificationReceiver');
@@ -31,11 +31,11 @@ class NewNotification{
     }
   }
 
-  static Future<marshalling_data.StatusBarNotification?> peek(String notificationGuid) {
+  static Future<NotificationData?> peek(String notificationGuid) {
     try {
       return _notificationReceiver.invokeMethod('getNotificationDetail', {'fileName': notificationGuid }).then((value) {
         if (value is Map<Object?, Object?>) {
-          return marshalling_data.StatusBarNotification.fromMap(value);
+          return NotificationData.fromMap(value);
         }
         return null;
       });
@@ -44,7 +44,7 @@ class NewNotification{
     }
   }
 
-  static Future<marshalling_data.StatusBarNotification?> pop(String notificationGuid) async {
+  static Future<NotificationData?> pop(String notificationGuid) async {
     try {
       final result = await peek(notificationGuid);
       await delete(notificationGuid);

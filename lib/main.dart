@@ -186,13 +186,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     for (final n in notifications) {
-      final sbn = await NewNotification.peek(n);
+      final notificationData = await NewNotification.peek(n);
 
-      if (sbn == null) {
+      if (notificationData == null) {
         continue;
       }
 
-      final notificationData = NotificationData(sbn);
       applicationState.notificationList.add(notificationData);
 
       await _saveAppState(applicationState);
