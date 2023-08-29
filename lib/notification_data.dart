@@ -10,22 +10,14 @@ class NotificationData {
 
   NotificationData(this.statusBarNotification);
 
-  Future<String> getAppLabel() async {
+  String getAppLabel() {
     if (_appLabel != null) {
       return _appLabel as String;
     }
-    _appLabel = '';
-    final packageName = statusBarNotification.getPackageName;
-
-    if (packageName == null) {
-      return _appLabel as String;
+    if (statusBarNotification.getPackageName != null) {
+      return statusBarNotification.getPackageName as String;
     }
-    _appLabel = packageName;
-    try {
-      _appLabel = await _packageManager.invokeMethod('getAppLabel', {'packageName': packageName });
-    } catch (_) {
-    }
-    return _appLabel as String;
+    return '';
   }
 
   Map<String, Object?>? toMap() {
