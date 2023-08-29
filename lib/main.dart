@@ -286,26 +286,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           const Text(''),
                         ],
                       ),
-                      subtitle: FutureBuilder<String>(
-                        future: _applicationState.notificationList[index].getAppLabel(),
-                        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(snapshot.data ?? '',
-                                  softWrap: false,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  _applicationState.notificationList[index].statusBarNotification.getNotification?.tickerText?.value ?? '',
-                                ),
-                              ],
-                            );
-                          }
-                        },
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_applicationState.notificationList[index].getAppLabel(),
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            _applicationState.notificationList[index].statusBarNotification.getNotification?.tickerText?.value ?? '',
+                          ),
+                        ],
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
