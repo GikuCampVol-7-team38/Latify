@@ -37,7 +37,7 @@ class MyNotificationListenerService : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
 
-        val packageName = sbn?.packageName?.toString() ?: ""
+        val packageName = sbn?.packageName?.toString()
 
         if (packageName == "com.github.GikuCampVol7team38.latify") {
             return
@@ -193,17 +193,19 @@ class MyNotificationListenerService : NotificationListenerService() {
             rawNotificationFolder.mkdir()
         }
 
-        val file = File(rawNotificationFolder, UUID.randomUUID().toString())
-        EncryptedStorage.writeBytes(file, MyMessagePack.pack(map))
-
         val intent = Intent(NOTIFICATION_LISTENER_ACTION)
         sendBroadcast(intent)
 
         val notification = sbn?.notification
 
-        if (packageName != "") {
+        if (packageName != null) {
             val appInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             val appLabel = packageManager.getApplicationLabel(appInfo).toString()
+
+            val file = File(rawNotificationFolder, UUID.randomUUID().toString())
+            EncryptedStorage.writeBytes(file, MyMessagePack.pack(hashMapOf<String, Any?>(
+                    "appLabel" to appLabel,
+                    "statusBarNotification" to map)))
 
             val map = hashMapOf<String, String>(
                 "appName" to appLabel,
@@ -227,6 +229,11 @@ class MyNotificationListenerService : NotificationListenerService() {
                 15000,
                 { _ -> {}}
             )
+        }
+        else {
+            val file = File(rawNotificationFolder, UUID.randomUUID().toString())
+            EncryptedStorage.writeBytes(file, MyMessagePack.pack(hashMapOf<String, Any?>(
+                    "statusBarNotification" to map)))
         }
     }
 
