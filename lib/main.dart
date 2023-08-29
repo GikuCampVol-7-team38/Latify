@@ -254,12 +254,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: _navigateToNotionPage,
-          )
-        ],
       ),
       body: Center(
         child: Column(
