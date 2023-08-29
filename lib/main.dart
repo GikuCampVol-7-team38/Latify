@@ -79,6 +79,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final MethodChannel _notificationAccessChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/notification_access');
   final MethodChannel _storageChannel = const MethodChannel('com.github.GeekCampVol7team38.latify/storage');
 
+  final ScrollController _scrollController = ScrollController();
+
+  double _scrollPosition = 0;
+
   Future<ApplicationState> _loadAppState() async {
     try {
       final result = await _storageChannel.invokeMethod('read', {'fileName': 'AppState'});
@@ -210,6 +214,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _checkPermission();
     _reloadNotification();
 
+    _scrollController.addListener(_scrollListener);
+
     try{
       _lifecycleChannel.setMethodCallHandler((MethodCall methodCall) {
         if (methodCall.method == 'activityResumed') {
@@ -219,6 +225,12 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     } on PlatformException catch (_) {
     }
+  }
+
+  void _scrollListener() {
+    setState(() {
+      _scrollPosition = _scrollController.position.pixels;
+    });
   }
 
   void _navigateToNotionPage(){
@@ -236,23 +248,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(_scrollListener);
     _editingController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    double initialAppBarHeight = AppBar().preferredSize.height; // initial height of the AppBar
+    double minAppBarHeight = 32; // minimum height of the AppBar
+    double initialLogoHeight = AppBar().preferredSize.height; // initial height of the logo
+    double minLogoHeight = 30; // minimum height of the logo
+    double triggerScroll = 50; // scroll distance to trigger the change
+
+    double offset = (_scrollPosition <= triggerScroll) ? _scrollPosition / triggerScroll : 1.0;
+    double currentAppBarHeight = initialAppBarHeight - (initialAppBarHeight - minAppBarHeight) * offset;
+    double currentLogoHeight = initialLogoHeight - (initialLogoHeight - minLogoHeight) * offset;
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Row(
-          children: <Widget>[
-            Image.asset(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(currentAppBarHeight),
+        child: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Transform(
+            transform: Matrix4.identity()
+              ..translate(((MediaQuery.of(context).size.width - 68)/ 2 - currentLogoHeight / 2) * offset),
+            child: Image.asset(
               'assets/logo.png',
               fit: BoxFit.contain,
-              height: AppBar().preferredSize.height,
+              height: currentLogoHeight,
             ),
-          ],
+          ),
         ),
       ),
       body: Center(
@@ -261,6 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Expanded(
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: _applicationState.notificationList.length,
                 itemBuilder: (context, index) {
                   final isCurrentlyEditing = _isEditing && _editingIndex == index;
