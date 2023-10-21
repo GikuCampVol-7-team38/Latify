@@ -2,8 +2,6 @@ name: Build Flutter Android
 
 on:
   push:
-    branches:
-      - main
 
 jobs:
   build:
