@@ -33,7 +33,7 @@ dependencies:
   intl: ^0.18.1
   in_app_purchase: ^3.1.11
   msgpack_dart: ^1.0.1
-  http: ^0.13.3
+  http: ^1.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
