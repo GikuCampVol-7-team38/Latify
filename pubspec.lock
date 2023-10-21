@@ -151,10 +151,10 @@ packages:
     dependency: "direct main"
     description:
       name: in_app_purchase
-      sha256: "944b9a9d8cce41a0ac057dd6984c942f01bfed9a8106247f2f630b06f5db8aab"
+      sha256: bdda02b5b11b56d5e29c7f0c57c433db3452b0c8ce1c37cbfcf1de52946efd9f
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.8"
+    version: "3.1.11"
   in_app_purchase_android:
     dependency: transitive
     description:
