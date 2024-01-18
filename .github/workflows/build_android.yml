@@ -18,7 +18,7 @@ jobs:
           flutter-version: '3.10.6'
 
       - name: Cache Flutter dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.yaml') }}
@@ -26,7 +26,7 @@ jobs:
             ${{ runner.os }}-pub-
 
       - name: Cache Gradle dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
